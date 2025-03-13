@@ -1,0 +1,22 @@
+:root {
+  --sidebar-width: 16rem;
+  --sidebar-width-icon: 4rem;
+}
+
+/* Base sidebar styles */
+[data-sidebar="sidebar"] {
+  background-color: rgb(23 23 23); /* neutral-900 */
+  color: rgb(250 250 250); /* neutral-50 */
+  border-right-width: 1px;
+  border-color: rgb(38 38 38); /* neutral-800 */
+}
+
+/* Dark mode styles */
+.dark [data-sidebar="sidebar"] {
+  background-color: rgb(10 10 10); /* neutral-950 */
+}
+
+/* Mobile styles */
+[data-sidebar="sidebar"][data-mobile="true"] {
+  border: none;
+}

@@ -1,0 +1,41 @@
+/* Fix for interactive elements in auth pages */
+.interactive-fix {
+  position: relative;
+}
+
+.interactive-fix * {
+  pointer-events: auto !important;
+}
+
+.interactive-fix input,
+.interactive-fix button,
+.interactive-fix a {
+  position: relative;
+  z-index: 50 !important;
+}
+
+/* Fix for Framer Motion animations blocking interactions */
+.framer-motion-fix {
+  pointer-events: none;
+}
+
+.framer-motion-fix > * {
+  pointer-events: auto;
+}
+
+/* Fix for absolute/fixed positioned elements */
+.absolute-fix {
+  position: relative;
+  z-index: 1;
+}
+
+.absolute-fix > * {
+  z-index: 2;
+}
+
+/* Focus ring styles for keyboard navigation */
+.focus-visible:focus {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
