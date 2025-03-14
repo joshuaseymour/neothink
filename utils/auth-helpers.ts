@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/client"
+import { createClient } from "@/lib/supabase/client"
 import { redirect } from "next/navigation"
 
 /**
@@ -38,4 +38,3 @@ export async function redirectIfAuthenticated(redirectTo = "/dashboard") {
     // Continue to the current page if there's an error
   }
 }
-

@@ -1,57 +1,35 @@
-import { createClient } from "@/utils/supabase/client"
+import { createClient } from "@/lib/supabase/client"
 
 export async function loadUserProfile() {
   const supabase = createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
-  try {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser()
-
-    if (userError || !user) {
-      throw new Error("User not authenticated")
-    }
-
-    const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).single()
-
-    if (error) {
-      throw error
-    }
-
-    return {
-      ...data,
-      email: user.email,
-    }
-  } catch (error) {
-    console.error("Error loading profile:", error)
+  if (!user) {
     return null
   }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single()
+
+  return profile
 }
 
-export async function updateUserProfile(profileData) {
+export async function updateUserProfile(userId: string, updates: any) {
   const supabase = createClient()
+  
+  const { data, error } = await supabase
+    .from("profiles")
+    .update(updates)
+    .eq("id", userId)
+    .select()
+    .single()
 
-  try {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser()
-
-    if (userError || !user) {
-      throw new Error("User not authenticated")
-    }
-
-    const { error } = await supabase.from("profiles").update(profileData).eq("id", user.id)
-
-    if (error) {
-      throw error
-    }
-
-    return true
-  } catch (error) {
-    console.error("Error updating profile:", error)
-    return false
+  if (error) {
+    throw error
   }
-}
 
+  return data
+}
