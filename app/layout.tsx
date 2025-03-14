@@ -1,11 +1,13 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
-import { Toaster } from "@/components/ui/toaster"
-import { ErrorBoundary } from "@/components/error-boundary"
-import { QueryProvider } from "@/components/query-provider"
+import { Providers } from "./providers"
 import "@/styles/globals.css"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+})
 
 export const metadata: Metadata = {
   title: "Neothink+ | Transform Your Life",
@@ -14,14 +16,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
-      <body className={inter.className}>
-        <ErrorBoundary>
-          <QueryProvider>
-            {children}
-            <Toaster />
-          </QueryProvider>
-        </ErrorBoundary>
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
+      <body className={`font-sans ${inter.className}`}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

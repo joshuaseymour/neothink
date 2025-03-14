@@ -1,4 +1,4 @@
-# NeoThink+ Dashboard
+# NeoThink+
 
 A modern web application built with Next.js 14, Supabase, and TailwindCSS.
 
@@ -17,9 +17,7 @@ cp .env.example .env.local
 # Add your Supabase credentials
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-
-# Optional: Add Sentry for error tracking
-NEXT_PUBLIC_SENTRY_DSN=your_sentry_dsn
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 3. Run the development server:
@@ -34,9 +32,8 @@ npm run dev
 - **Framework**: [Next.js 14](https://nextjs.org/) with App Router
 - **Database**: [Supabase](https://supabase.com/)
 - **Styling**: [TailwindCSS](https://tailwindcss.com/)
-- **Components**: [Radix UI](https://www.radix-ui.com/)
-- **Data Fetching**: [TanStack Query](https://tanstack.com/query)
-- **Error Tracking**: [Sentry](https://sentry.io/)
+- **Components**: [shadcn/ui](https://ui.shadcn.com/)
+- **UI Development**: [v0.dev](https://v0.dev)
 
 ## 🗄️ Database Schema
 
@@ -44,100 +41,74 @@ npm run dev
 ```sql
 id: uuid (primary key)
 full_name: text
-username: text
-bio: text
 email: text
-focus_area: text
-location: text
-website: text
 avatar_url: text
+onboarding_completed: boolean
 created_at: timestamp
 updated_at: timestamp
 ```
 
-### User Subscriptions Table
+### Program Progress Table
 ```sql
 id: uuid (primary key)
 user_id: uuid (foreign key)
-tier: text
-active: boolean
+program_id: text
+progress: integer
+last_activity: timestamp
 created_at: timestamp
 updated_at: timestamp
-expires_at: timestamp
 ```
 
-### User Activity Table
+### User Settings Table
 ```sql
-id: uuid (primary key)
-user_id: uuid (foreign key)
-title: text
-program: text
+user_id: uuid (primary key)
+theme: text
+email_notifications: boolean
 created_at: timestamp
-```
-
-### Events Table
-```sql
-id: uuid (primary key)
-title: text
-description: text
-program: text
-date: timestamp
-created_at: timestamp
+updated_at: timestamp
 ```
 
 ## 📁 Project Structure
 
 ```
-├── app/                   # Next.js app directory
-│   ├── (protected)/      # Protected routes
-│   ├── (public)/         # Public routes
-│   └── api/              # API routes
-├── components/           # React components
-│   ├── ui/              # UI components
-│   ├── dashboard/       # Dashboard components
-│   └── profile/         # Profile components
-├── lib/                 # Utility functions
-│   └── supabase/       # Supabase client
-└── types/              # TypeScript types
+├── app/              # Next.js app directory
+│   ├── (auth)/      # Auth routes
+│   ├── (dashboard)/ # Dashboard routes
+│   └── api/         # API routes
+├── components/      # React components
+│   ├── ui/         # UI components
+│   ├── layout/     # Layout components
+│   └── profile/    # Profile components
+├── context/        # React context
+└── lib/           # Utility functions
 ```
 
 ## 🔒 Authentication
 
-Authentication is handled by Supabase. Protected routes are in the `app/(protected)` directory and require a valid session.
+Authentication is handled by Supabase Auth. Protected routes in the `app/(dashboard)` directory require a valid session.
 
 ## 🎨 UI Components
 
-The app uses a combination of custom components and Radix UI primitives, all styled with TailwindCSS.
+The app uses [shadcn/ui](https://ui.shadcn.com/) components, styled with TailwindCSS and prototyped with [v0.dev](https://v0.dev).
 
 ## 🚀 Deployment
 
 1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Add your environment variables in Vercel
+2. Import your repository to Vercel
+3. Add your environment variables:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SITE_URL`
 4. Deploy!
-
-## 🛠️ Development Tools
-
-- Use v0.dev for rapid UI prototyping
-- Use the Supabase dashboard to manage your database
-- Use Vercel for deployment and monitoring
 
 ## 📱 Features
 
 - User authentication with Supabase
 - Protected dashboard routes
 - Profile management
-- Program subscriptions
-- Activity tracking
-- Event management
-- Error tracking with Sentry
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a new branch
-3. Make your changes
-4. Submit a pull request
+- Program progress tracking
+- Theme customization
+- Responsive design
 
 ## 📄 License
 
