@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import { PasswordInput } from "./password/PasswordInput"
-import type { LoginFormData, SignupFormData } from "@/types"
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -19,6 +18,9 @@ const loginSchema = z.object({
 const signupSchema = loginSchema.extend({
   fullName: z.string().min(2, "Name must be at least 2 characters"),
 })
+
+type LoginFormData = z.infer<typeof loginSchema>
+type SignupFormData = z.infer<typeof signupSchema>
 
 interface AuthFormProps {
   type: "login" | "signup"
@@ -33,11 +35,11 @@ export function AuthForm({ type, onSuccess }: AuthFormProps) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData | SignupFormData>({
+  } = useForm<SignupFormData>({
     resolver: zodResolver(type === "login" ? loginSchema : signupSchema),
   })
 
-  const onSubmit = async (data: LoginFormData | SignupFormData) => {
+  const onSubmit = async (data: SignupFormData) => {
     try {
       setIsLoading(true)
       const response = await fetch("/api/auth", {
