@@ -2,18 +2,12 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { motion } from "framer-motion"
 
 export function HeroSection() {
   return (
     <section className="relative py-20 md:py-32 overflow-hidden bg-gradient-to-b from-neutral-950 to-neutral-900">
       <div className="container relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center max-w-4xl mx-auto"
-        >
+        <div className="animate-fade-in text-center max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600">
             Transform Your Life with Neothink+
           </h1>
@@ -32,7 +26,7 @@ export function HeroSection() {
               </Button>
             </Link>
           </div>
-        </motion.div>
+        </div>
       </div>
       
       {/* Background gradient effects */}
