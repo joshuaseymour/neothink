@@ -1,52 +1,44 @@
 "use client"
 
+import { FieldValues, SubmitHandler } from "react-hook-form"
 import { useState } from "react"
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/components/ui/use-toast"
 import { handleError } from "@/lib/utils"
 
-interface UseFormSubmitOptions<T> {
-  onSubmit: (values: T) => Promise<void>
-  onSuccess?: () => void
-  successMessage?: {
-    title?: string
-    description?: string
-  }
+interface UseFormSubmitOptions<T extends FieldValues> {
+  onSubmit: SubmitHandler<T>
+  successMessage?: string
+  errorMessage?: string
 }
 
-export function useFormSubmit<T>({ onSubmit, onSuccess, successMessage }: UseFormSubmitOptions<T>) {
-  const [isSubmitting, setIsSubmitting] = useState(false)
+export function useFormSubmit<T extends FieldValues>({
+  onSubmit,
+  successMessage = "Success!",
+  errorMessage = "Something went wrong. Please try again.",
+}: UseFormSubmitOptions<T>) {
+  const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
-  const handleSubmit = async (values: T) => {
-    setIsSubmitting(true)
+  const handleSubmit: SubmitHandler<T> = async (data) => {
     try {
-      await onSubmit(values)
-
-      if (successMessage) {
-        toast({
-          title: successMessage.title || "Success",
-          description: successMessage.description || "Operation completed successfully",
-          variant: "default",
-        })
-      }
-
-      if (onSuccess) {
-        onSuccess()
-      }
-    } catch (error) {
+      setIsLoading(true)
+      await onSubmit(data)
       toast({
-        title: "Error",
-        description: handleError(error),
+        description: successMessage,
+      })
+    } catch (error) {
+      handleError(error)
+      toast({
         variant: "destructive",
+        description: errorMessage,
       })
     } finally {
-      setIsSubmitting(false)
+      setIsLoading(false)
     }
   }
 
   return {
-    isSubmitting,
+    isLoading,
     handleSubmit,
   }
 }
-
