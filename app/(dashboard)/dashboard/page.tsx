@@ -66,7 +66,7 @@ export default function DashboardPage() {
                   <div className="h-2 bg-muted rounded-full">
                     <div
                       className="h-full bg-primary rounded-full transition-all"
-                      style={{ width: \`\${program.progress}%\` }}
+                      style={{ width: `${program.progress}%` }}
                     />
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
