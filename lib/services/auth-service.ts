@@ -125,7 +125,22 @@ export class AuthService {
   async getSession() {
     try {
       const { data: { session }, error } = await this.supabase.auth.getSession()
+      
       if (error) throw error
+      
+      // Check session expiration
+      if (session) {
+        const expiresAt = new Date((session.expires_at || 0) * 1000)
+        if (expiresAt <= new Date()) {
+          // Session expired, try to refresh
+          const { data: { session: newSession }, error: refreshError } = 
+            await this.supabase.auth.refreshSession()
+          
+          if (refreshError) throw refreshError
+          return { session: newSession, error: null }
+        }
+      }
+      
       return { session, error: null }
     } catch (error) {
       console.error('Get session error:', error)
@@ -230,13 +245,10 @@ export class AuthService {
     }
   }
 
-  private getErrorMessage(error: unknown): string {
-    if (error instanceof Error) {
-      return error.message
-    }
-    if (typeof error === 'string') {
-      return error
-    }
-    return 'An unknown error occurred'
+  private getErrorMessage(error: any): string {
+    if (typeof error === 'string') return error
+    if (error?.message) return error.message
+    if (error?.error_description) return error.error_description
+    return 'An unexpected error occurred'
   }
 }

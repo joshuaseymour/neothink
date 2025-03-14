@@ -1,4 +1,5 @@
 import { createClient as createServerClient } from "@/utils/supabase/server"
+import { Redis } from "@upstash/redis"
 
 /**
  * Authentication Verification Utility
@@ -7,13 +8,41 @@ import { createClient as createServerClient } from "@/utils/supabase/server"
  * without changing the visual design of the application.
  */
 export class AuthVerification {
+  private static redis = new Redis({
+    url: process.env.UPSTASH_REDIS_REST_URL!,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+  })
+
+  private static async checkRateLimit(ip: string, action: string): Promise<boolean> {
+    const key = `rate_limit:${action}:${ip}`
+    const limit = 5 // attempts
+    const window = 300 // 5 minutes in seconds
+
+    const current = await this.redis.incr(key)
+    if (current === 1) {
+      await this.redis.expire(key, window)
+    }
+
+    return current <= limit
+  }
+
   /**
    * Verify a user login attempt server-side
    */
-  static async verifyLogin(email: string, password: string) {
+  static async verifyLogin(email: string, password: string, ip: string = "unknown") {
     console.log(`[Auth Verification] Testing login for email: ${email}`)
 
     try {
+      // Check rate limiting
+      const canProceed = await this.checkRateLimit(ip, "login")
+      if (!canProceed) {
+        return { 
+          success: false, 
+          error: "Too many login attempts. Please try again in 5 minutes.", 
+          data: null 
+        }
+      }
+
       const supabase = createServerClient()
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -24,6 +53,9 @@ export class AuthVerification {
         console.error(`[Auth Verification] Login failed: ${error.message}`)
         return { success: false, error: error.message, data: null }
       }
+
+      // Reset rate limit on successful login
+      await this.redis.del(`rate_limit:login:${ip}`)
 
       console.log(`[Auth Verification] Login successful for user: ${data.user?.id}`)
       return { success: true, error: null, data }
@@ -61,7 +93,14 @@ export class AuthVerification {
 
       if (expiresAt < now) {
         console.error(`[Auth Verification] Session expired at ${expiresAt.toISOString()}`)
-        return { success: false, error: "Session expired", data: data.session }
+        // Try to refresh the session
+        const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession()
+        
+        if (refreshError || !refreshData.session) {
+          return { success: false, error: "Session expired and refresh failed", data: null }
+        }
+        
+        return { success: true, error: null, data: refreshData.session }
       }
 
       return { success: true, error: null, data: data.session }
@@ -74,16 +113,30 @@ export class AuthVerification {
   /**
    * Verify user signup process
    */
-  static async verifySignup(email: string, password: string) {
+  static async verifySignup(email: string, password: string, ip: string = "unknown") {
     console.log(`[Auth Verification] Testing signup for email: ${email}`)
 
     try {
+      // Check rate limiting
+      const canProceed = await this.checkRateLimit(ip, "signup")
+      if (!canProceed) {
+        return { 
+          success: false, 
+          error: "Too many signup attempts. Please try again in 5 minutes.", 
+          data: null 
+        }
+      }
+
       const supabase = createServerClient()
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+          data: {
+            email_verified: false,
+            registration_ip: ip
+          }
         },
       })
 
