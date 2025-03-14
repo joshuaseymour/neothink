@@ -1,7 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
-import * as Sentry from "@sentry/nextjs"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
@@ -11,18 +9,13 @@ interface ErrorBoundaryProps {
 }
 
 export function ErrorBoundary({ error, reset }: ErrorBoundaryProps) {
-  useEffect(() => {
-    // Log the error to Sentry
-    Sentry.captureException(error)
-  }, [error])
-
   return (
     <div className="flex min-h-[400px] items-center justify-center p-6">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Something went wrong!</CardTitle>
           <CardDescription>
-            Don&apos;t worry, we&apos;ve logged the error and will fix it soon.
+            We apologize for the inconvenience. Please try refreshing the page.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
