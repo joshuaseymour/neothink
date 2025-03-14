@@ -3,9 +3,8 @@
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import { ButtonWrapper } from "@/components/ui/button-wrapper"
+import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
-import { AuthProvider } from "@/context/auth-context"
 import { createClient } from "@/lib/supabase/client"
 
 export default function SettingsPage() {
@@ -132,7 +131,7 @@ export default function SettingsPage() {
           <CardTitle>Account</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <ButtonWrapper
+          <Button
             variant="outline"
             className="w-full"
             onClick={() => {
@@ -143,8 +142,8 @@ export default function SettingsPage() {
             }}
           >
             Export Account Data
-          </ButtonWrapper>
-          <ButtonWrapper
+          </Button>
+          <Button
             variant="destructive"
             className="w-full"
             onClick={() => {
@@ -155,7 +154,7 @@ export default function SettingsPage() {
             }}
           >
             Delete Account
-          </ButtonWrapper>
+          </Button>
         </CardContent>
       </Card>
     </div>

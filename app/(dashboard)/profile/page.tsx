@@ -3,11 +3,13 @@
 import { useState } from "react"
 import { useAuth } from "@/context/auth-context"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { InputWrapper } from "@/components/ui/input-wrapper"
-import { ButtonWrapper } from "@/components/ui/button-wrapper"
-import { FormWrapper } from "@/components/ui/form-wrapper"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { createClient } from "@/lib/supabase/client"
 import { useToast } from "@/components/ui/use-toast"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
 export default function ProfilePage() {
   const { user } = useAuth()
@@ -44,6 +46,11 @@ export default function ProfilePage() {
     } catch (error: any) {
       console.error("Error updating profile:", error)
       setError(error.message)
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
@@ -63,40 +70,47 @@ export default function ProfilePage() {
           <CardTitle>Personal Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <FormWrapper
-            onSubmit={handleUpdateProfile}
-            error={error}
-            isLoading={isLoading}
-          >
-            <InputWrapper
-              label="Email"
-              type="email"
-              value={user?.email || ""}
-              disabled
-              id="email"
-            />
-            <InputWrapper
-              label="Full Name"
-              name="fullName"
-              placeholder="Enter your full name"
-              id="fullName"
-            />
-            <InputWrapper
-              label="Bio"
-              name="bio"
-              placeholder="Tell us about yourself"
-              id="bio"
-              component="textarea"
-            />
-            <ButtonWrapper
+          <form onSubmit={handleUpdateProfile} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                type="email"
+                value={user?.email || ""}
+                disabled
+                id="email"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Full Name</Label>
+              <Input
+                name="fullName"
+                placeholder="Enter your full name"
+                id="fullName"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bio">Bio</Label>
+              <Textarea
+                name="bio"
+                placeholder="Tell us about yourself"
+                id="bio"
+              />
+            </div>
+            <Button
               type="submit"
-              isLoading={isLoading}
-              loadingText="Updating..."
               className="w-full"
+              disabled={isLoading}
             >
-              Update Profile
-            </ButtonWrapper>
-          </FormWrapper>
+              {isLoading ? (
+                <>
+                  <LoadingSpinner className="mr-2" />
+                  Updating...
+                </>
+              ) : (
+                "Update Profile"
+              )}
+            </Button>
+          </form>
         </CardContent>
       </Card>
 
@@ -113,9 +127,9 @@ export default function ProfilePage() {
                   Receive updates about your enrolled programs
                 </p>
               </div>
-              <ButtonWrapper variant="outline">
+              <Button variant="outline">
                 Manage
-              </ButtonWrapper>
+              </Button>
             </div>
             <div className="flex items-center justify-between">
               <div>
@@ -124,9 +138,9 @@ export default function ProfilePage() {
                   Get notified about community events and discussions
                 </p>
               </div>
-              <ButtonWrapper variant="outline">
+              <Button variant="outline">
                 Manage
-              </ButtonWrapper>
+              </Button>
             </div>
           </div>
         </CardContent>
@@ -137,7 +151,7 @@ export default function ProfilePage() {
           <CardTitle>Account Security</CardTitle>
         </CardHeader>
         <CardContent>
-          <ButtonWrapper
+          <Button
             variant="outline"
             className="w-full"
             onClick={() => {
@@ -148,7 +162,7 @@ export default function ProfilePage() {
             }}
           >
             Change Password
-          </ButtonWrapper>
+          </Button>
         </CardContent>
       </Card>
     </div>

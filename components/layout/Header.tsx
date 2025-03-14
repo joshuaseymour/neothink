@@ -12,7 +12,7 @@ import {
 import { useAuth } from "@/context/auth-context"
 
 interface HeaderProps {
-  user: User
+  user: User | null
 }
 
 export function Header({ user }: HeaderProps) {
@@ -21,33 +21,46 @@ export function Header({ user }: HeaderProps) {
   return (
     <header className="border-b bg-background">
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/dashboard" className="flex items-center space-x-2">
+        <Link href="/" className="flex items-center space-x-2">
           <span className="text-2xl font-bold">Neothink+</span>
         </Link>
         <nav className="flex items-center space-x-6">
-          <Link href="/dashboard" className="text-sm font-medium hover:text-primary">
-            Dashboard
-          </Link>
-          <Link href="/dashboard/profile" className="text-sm font-medium hover:text-primary">
-            Profile
-          </Link>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                <span className="text-sm font-medium">
-                  {user.email?.[0].toUpperCase()}
-                </span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem asChild>
-                <Link href="/dashboard/profile">Profile Settings</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => signOut()}>
-                Sign Out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {user ? (
+            <>
+              <Link href="/dashboard" className="text-sm font-medium hover:text-primary">
+                Dashboard
+              </Link>
+              <Link href="/dashboard/profile" className="text-sm font-medium hover:text-primary">
+                Profile
+              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <span className="text-sm font-medium">
+                      {user.email?.[0].toUpperCase()}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem asChild>
+                    <Link href="/dashboard/profile">Profile Settings</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          ) : (
+            <>
+              <Link href="/auth/login">
+                <Button variant="ghost">Login</Button>
+              </Link>
+              <Link href="/auth/signup">
+                <Button variant="default">Get Started</Button>
+              </Link>
+            </>
+          )}
         </nav>
       </div>
     </header>
