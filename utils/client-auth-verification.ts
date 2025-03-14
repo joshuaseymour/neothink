@@ -19,7 +19,7 @@ export class ClientAuthVerification {
       const { csrfToken } = await tokenResponse.json()
 
       // Make login request to the API
-      const loginResponse = await fetch("/api/auth/login-test", {
+      const loginResponse = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export class ClientAuthVerification {
       const { csrfToken } = await tokenResponse.json()
 
       // Make signup request to the API
-      const signupResponse = await fetch("/api/auth/signup-test", {
+      const signupResponse = await fetch("/api/auth/signup-direct", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export class ClientAuthVerification {
     report.overallSuccess = report.overallSuccess && loginResult.success
 
     // 3. Test session verification
-    const sessionResponse = await fetch("/api/auth/session-test")
+    const sessionResponse = await fetch("/api/auth/verify-session")
     const sessionResult = await sessionResponse.json()
 
     report.tests.push({
@@ -135,4 +135,3 @@ export class ClientAuthVerification {
     return report
   }
 }
-

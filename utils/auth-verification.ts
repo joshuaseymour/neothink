@@ -127,14 +127,12 @@ export class AuthVerification {
   }
 
   /**
-   * Verify session storage in Redis
+   * Verify session storage
    */
   static async verifySessionStorage(sessionId: string) {
     console.log(`[Auth Verification] Verifying session storage for ID: ${sessionId}`)
 
     try {
-      // This would typically use your SessionStore class
-      // For verification purposes, we'll use a direct API call
       const response = await fetch("/api/auth/verify-session", {
         method: "POST",
         headers: {
@@ -165,7 +163,7 @@ export class AuthVerification {
     console.log(`[Auth Verification] Verifying CSRF protection`)
 
     try {
-      // First, get a valid CSRF token
+      // Get a valid CSRF token
       const tokenResponse = await fetch("/api/auth/csrf", {
         method: "GET",
       })
@@ -177,33 +175,37 @@ export class AuthVerification {
 
       const { csrfToken } = await tokenResponse.json()
 
-      // Now try to make a request with the token
-      const validResponse = await fetch("/api/auth/test-csrf", {
+      // Try a login request with the token (this verifies CSRF protection)
+      const testEmail = `test-${Date.now()}@example.com`
+      const testPassword = "Test123!"
+      
+      const loginResponse = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "X-CSRF-Token": csrfToken,
         },
-        body: JSON.stringify({ test: true }),
+        body: JSON.stringify({ email: testEmail, password: testPassword }),
       })
 
-      if (!validResponse.ok) {
+      // We expect this to fail with 401 (unauthorized) but not 403 (forbidden)
+      if (loginResponse.status === 403) {
         console.error(`[Auth Verification] Valid CSRF token was rejected`)
         return { success: false, error: "Valid CSRF token was rejected", data: null }
       }
 
-      // Now try without a token
-      const invalidResponse = await fetch("/api/auth/test-csrf", {
+      // Try without a token (should be rejected)
+      const invalidResponse = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ test: true }),
+        body: JSON.stringify({ email: testEmail, password: testPassword }),
       })
 
-      if (invalidResponse.ok) {
-        console.error(`[Auth Verification] Security issue: Request without CSRF token was accepted`)
-        return { success: false, error: "Request without CSRF token was accepted", data: null }
+      if (invalidResponse.status !== 403) {
+        console.error(`[Auth Verification] Request without CSRF token was not rejected`)
+        return { success: false, error: "Missing CSRF protection", data: null }
       }
 
       console.log(`[Auth Verification] CSRF protection verified successfully`)
@@ -286,4 +288,3 @@ export class AuthVerification {
     return report
   }
 }
-
