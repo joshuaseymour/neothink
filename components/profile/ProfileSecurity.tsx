@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
 import { createClient } from "@/lib/supabase/client"
-import { sendSecurityNotification } from "@/lib/email"
 
 const passwordSchema = z
   .object({
@@ -69,11 +68,8 @@ export function ProfileSecurity({ user }: ProfileSecurityProps) {
 
       if (updateError) throw updateError
 
-      // Send security notification
-      await sendSecurityNotification(user.email!, "password change")
-
       toast({
-        title: "Password updated",
+        title: "Success",
         description: "Your password has been updated successfully.",
       })
       reset()
