@@ -1,48 +1,83 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 import { createClient } from "@/lib/supabase/client"
 
 export default function SettingsPage() {
+  const [isLoading, setIsLoading] = useState(true)
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
   const [supabase, setSupabase] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
   const { toast } = useToast()
 
   useEffect(() => {
-    setSupabase(createClient())
-  }, [])
+    const client = createClient()
+    setSupabase(client)
 
-  const handleUpdateSettings = async (setting: string, value: boolean) => {
+    const getProfile = async () => {
+      try {
+        const { data: { session } } = await client.auth.getSession()
+        if (!session) {
+          router.push("/auth/login")
+          return
+        }
+
+        const { data: profile, error } = await client
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .single()
+
+        if (error) throw error
+
+        setName(profile?.full_name || "")
+        setEmail(session.user.email || "")
+        setIsLoading(false)
+      } catch (error: any) {
+        toast({
+          title: "Error loading profile",
+          description: error.message,
+          variant: "destructive",
+        })
+      }
+    }
+
+    getProfile()
+  }, [router, toast])
+
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault()
     if (!supabase) return
 
     try {
       setIsLoading(true)
-
-      const { data: { user }, error: userError } = await supabase.auth.getUser()
-      if (userError) throw userError
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) throw new Error("No session")
 
       const { error } = await supabase
-        .from("user_settings")
-        .upsert({
-          user_id: user?.id,
-          [setting]: value,
+        .from("profiles")
+        .update({
+          full_name: name,
           updated_at: new Date().toISOString(),
         })
+        .eq("id", session.user.id)
 
       if (error) throw error
 
       toast({
-        title: "Settings updated",
-        description: "Your preferences have been saved.",
+        title: "Profile updated",
+        description: "Your profile has been updated successfully.",
       })
     } catch (error: any) {
-      console.error("Error updating settings:", error)
       toast({
-        title: "Error",
+        title: "Error updating profile",
         description: error.message,
         variant: "destructive",
       })
@@ -52,117 +87,45 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-8">
-      <section>
-        <h1 className="text-3xl font-bold mb-2">Settings</h1>
-        <p className="text-muted-foreground">
-          Manage your account settings and preferences
-        </p>
-      </section>
-
+    <div className="container max-w-2xl py-8">
       <Card>
         <CardHeader>
-          <CardTitle>Notifications</CardTitle>
+          <CardTitle>Settings</CardTitle>
+          <CardDescription>
+            Update your profile settings and preferences.
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <h3 className="font-medium">Email Notifications</h3>
-              <p className="text-sm text-muted-foreground">
-                Receive program updates and announcements
-              </p>
+        <CardContent>
+          <form onSubmit={handleUpdateProfile} className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter your name"
+                  disabled={isLoading}
+                />
+              </div>
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  disabled
+                  placeholder="Your email address"
+                />
+                <p className="text-sm text-muted-foreground mt-2">
+                  Email cannot be changed. Contact support for help.
+                </p>
+              </div>
             </div>
-            <Switch
-              onCheckedChange={(checked) =>
-                handleUpdateSettings("email_notifications", checked)
-              }
-              disabled={isLoading || !supabase}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <h3 className="font-medium">Progress Reminders</h3>
-              <p className="text-sm text-muted-foreground">
-                Get reminded about your program progress
-              </p>
-            </div>
-            <Switch
-              onCheckedChange={(checked) =>
-                handleUpdateSettings("progress_reminders", checked)
-              }
-              disabled={isLoading || !supabase}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Privacy</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <h3 className="font-medium">Profile Visibility</h3>
-              <p className="text-sm text-muted-foreground">
-                Show your profile to other community members
-              </p>
-            </div>
-            <Switch
-              onCheckedChange={(checked) =>
-                handleUpdateSettings("profile_visible", checked)
-              }
-              disabled={isLoading || !supabase}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="space-y-0.5">
-              <h3 className="font-medium">Progress Sharing</h3>
-              <p className="text-sm text-muted-foreground">
-                Share your program progress with the community
-              </p>
-            </div>
-            <Switch
-              onCheckedChange={(checked) =>
-                handleUpdateSettings("share_progress", checked)
-              }
-              disabled={isLoading || !supabase}
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Account</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button
-            variant="outline"
-            className="w-full"
-            disabled={!supabase}
-            onClick={() => {
-              toast({
-                title: "Coming soon",
-                description: "Account export functionality will be available soon.",
-              })
-            }}
-          >
-            Export Account Data
-          </Button>
-          <Button
-            variant="destructive"
-            className="w-full"
-            disabled={!supabase}
-            onClick={() => {
-              toast({
-                title: "Coming soon",
-                description: "Account deletion functionality will be available soon.",
-              })
-            }}
-          >
-            Delete Account
-          </Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Saving..." : "Save changes"}
+            </Button>
+          </form>
         </CardContent>
       </Card>
     </div>
