@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       console.error("Auth callback error:", { error, error_description })
       return NextResponse.redirect(
         new URL(
-          `/auth/login?error=${encodeURIComponent(error_description || "Authentication failed")}`,
+          `/auth/error?error=${encodeURIComponent(error_description || "Authentication failed")}`,
           origin
         )
       )
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       console.error("Session exchange error:", exchangeError)
       return NextResponse.redirect(
         new URL(
-          `/auth/login?error=${encodeURIComponent("Failed to complete authentication")}`,
+          `/auth/error?error=${encodeURIComponent("Failed to complete authentication")}`,
           origin
         )
       )
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
       console.error("Get session error:", sessionError)
       return NextResponse.redirect(
         new URL(
-          `/auth/login?error=${encodeURIComponent("Failed to get session")}`,
+          `/auth/error?error=${encodeURIComponent("Failed to get session")}`,
           origin
         )
       )
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
       console.error("No session after code exchange")
       return NextResponse.redirect(
         new URL(
-          `/auth/login?error=${encodeURIComponent("Failed to create session")}`,
+          `/auth/error?error=${encodeURIComponent("Failed to create session")}`,
           origin
         )
       )
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
     console.error("Unhandled auth callback error:", error)
     return NextResponse.redirect(
       new URL(
-        `/auth/login?error=${encodeURIComponent("An unexpected error occurred")}`,
+        `/auth/error?error=${encodeURIComponent("An unexpected error occurred")}`,
         new URL(request.url).origin
       )
     )
