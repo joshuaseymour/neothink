@@ -51,9 +51,9 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-8 lg:p-12">
-        <Card className="w-full max-w-lg mx-auto">
-          <CardHeader className="space-y-4 text-center pb-8">
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <Card className="w-full max-w-2xl mx-auto">
+          <CardHeader className="space-y-4 text-center pb-8 px-8">
             <div className="flex justify-center mb-8">
               <Logo />
             </div>
@@ -64,7 +64,7 @@ export default function LoginPage() {
               Sign in to continue your journey
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-8">
             <form onSubmit={handleLogin} className="space-y-8">
               <div className="space-y-6">
                 <div className="space-y-3">
