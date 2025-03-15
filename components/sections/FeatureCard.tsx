@@ -17,6 +17,7 @@ interface FeatureCardProps {
   variant?: VariantType
   badgeText?: string
   href?: string
+  className?: string
 }
 
 export function FeatureCard({
@@ -26,22 +27,37 @@ export function FeatureCard({
   variant,
   badgeText,
   href = "/auth/signup",
+  className,
 }: FeatureCardProps) {
   return (
-    <Card className={cn(
-      "relative overflow-hidden transition-all duration-300 hover:shadow-lg",
-      variant === "ascender" && "hover:border-blue-500/50",
-      variant === "neothinker" && "hover:border-purple-500/50",
-      variant === "immortal" && "hover:border-green-500/50"
-    )}>
+    <Card
+      className={cn(
+        "group relative overflow-hidden rounded-lg border p-8 transition-all hover:shadow-lg",
+        "hover:border-neutral-200 dark:hover:border-neutral-800",
+        variant === "ascender" && "hover:border-orange-500/50",
+        variant === "neothinker" && "hover:border-amber-500/50",
+        variant === "immortal" && "hover:border-red-500/50",
+        className
+      )}
+    >
       <CardHeader>
         <div className="flex items-center justify-between mb-2">
-          <Icon className="h-8 w-8" />
+          <div
+            className={cn(
+              "mb-5 inline-flex h-12 w-12 items-center justify-center rounded-lg border transition-colors",
+              "bg-neutral-50 dark:bg-neutral-900",
+              variant === "ascender" && "border-orange-500/50 text-orange-500",
+              variant === "neothinker" && "border-amber-500/50 text-amber-500",
+              variant === "immortal" && "border-red-500/50 text-red-500",
+            )}
+          >
+            <Icon className="h-8 w-8" />
+          </div>
           {badgeText && (
             <Badge variant="outline" className={cn(
-              variant === "ascender" && "border-blue-500/50 text-blue-500",
-              variant === "neothinker" && "border-purple-500/50 text-purple-500",
-              variant === "immortal" && "border-green-500/50 text-green-500"
+              variant === "ascender" && "border-orange-500/50 text-orange-500",
+              variant === "neothinker" && "border-amber-500/50 text-amber-500",
+              variant === "immortal" && "border-red-500/50 text-red-500"
             )}>
               {badgeText}
             </Badge>

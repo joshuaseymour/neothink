@@ -13,13 +13,11 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-background text-foreground",
-        destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-        success:
-          "border-green-200 bg-green-50 text-green-800 [&>svg]:text-green-600 dark:border-green-800 dark:bg-green-950 dark:text-green-200",
-        warning:
-          "border-yellow-200 bg-yellow-50 text-yellow-800 [&>svg]:text-yellow-600 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-200",
-        info: "border-blue-200 bg-blue-50 text-blue-800 [&>svg]:text-blue-600 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-200",
+        default: "border-neutral-200 bg-white text-neutral-950 dark:border-neutral-800 dark:bg-neutral-950 dark:text-neutral-50",
+        error: "border-red-500/50 bg-red-50 text-red-900 dark:border-red-900/50 dark:bg-red-900/10 dark:text-red-200 [&>svg]:text-red-500",
+        warning: "border-amber-500/50 bg-amber-50 text-amber-900 dark:border-amber-900/50 dark:bg-amber-900/10 dark:text-amber-200 [&>svg]:text-amber-500",
+        info: "border-orange-500/50 bg-orange-50 text-orange-900 dark:border-orange-900/50 dark:bg-orange-900/10 dark:text-orange-200 [&>svg]:text-orange-500",
+        success: "border-red-500/50 bg-red-50 text-red-900 dark:border-red-900/50 dark:bg-red-900/10 dark:text-red-200 [&>svg]:text-red-500",
       },
     },
     defaultVariants: {
@@ -37,7 +35,7 @@ const Alert = React.forwardRef<
     if (hideIcon) return null
 
     switch (variant) {
-      case "destructive":
+      case "error":
         return LucideAlertCircle
       case "success":
         return CheckCircle
@@ -75,4 +73,3 @@ AlertDescription.displayName = "AlertDescription"
 
 // Make sure to export all required components
 export { Alert, AlertTitle, AlertDescription }
-

@@ -79,7 +79,7 @@ export default function HomePage() {
       <section className="py-24 bg-gradient-to-b from-background via-background to-muted/30" id="programs">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
+            <h2 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4">
               Transform Your Life
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -127,7 +127,7 @@ export default function HomePage() {
       <section className="py-24 bg-muted/30">
         <div className="container px-4 md:px-6">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
+            <h2 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4">
               Why Choose Neothink+
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -155,7 +155,7 @@ export default function HomePage() {
       <section className="py-24 bg-gradient-to-b from-muted/30 to-background relative overflow-hidden">
         <div className="container px-4 md:px-6 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-6">
+            <h2 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-6">
               Ready to Transform Your Life?
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
