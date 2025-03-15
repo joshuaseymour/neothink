@@ -38,15 +38,15 @@ export function HeroSection() {
             </div>
             <div className="pt-8 grid grid-cols-2 md:grid-cols-3 gap-4">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                <CheckCircle2 className="h-5 w-5 text-ascender-500" />
                 <span className="text-sm">Proven Methods</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                <CheckCircle2 className="h-5 w-5 text-ascender-500" />
                 <span className="text-sm">Expert Support</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                <CheckCircle2 className="h-5 w-5 text-ascender-500" />
                 <span className="text-sm">Guaranteed Results</span>
               </div>
             </div>
@@ -73,13 +73,13 @@ export function HeroSection() {
                 </div>
                 <div className="space-y-4 mt-8">
                   <div className="aspect-square rounded-2xl bg-white p-4 shadow-lg">
-                    <div className="h-full rounded-xl bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center">
-                      <Brain className="w-12 h-12 text-indigo-600" />
+                    <div className="h-full rounded-xl bg-gradient-to-br from-amber-100 to-amber-50 flex items-center justify-center">
+                      <Brain className="w-12 h-12 text-neothinker-600" />
                     </div>
                   </div>
                   <div className="aspect-square rounded-2xl bg-white p-4 shadow-lg">
-                    <div className="h-full rounded-xl bg-gradient-to-br from-pink-100 to-pink-50 flex items-center justify-center">
-                      <Target className="w-12 h-12 text-pink-600" />
+                    <div className="h-full rounded-xl bg-gradient-to-br from-orange-100 to-orange-50 flex items-center justify-center">
+                      <Target className="w-12 h-12 text-ascender-600" />
                     </div>
                   </div>
                 </div>
