@@ -2,8 +2,6 @@
 
 import { useState } from "react"
 import { User } from "@supabase/supabase-js"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card } from "@/components/ui/card"
 import type { Profile } from "@/types"
 import { ProfileForm } from "./ProfileForm"
 import { ProfileSecurity } from "./ProfileSecurity"
@@ -19,47 +17,59 @@ export function ProfileContainer({ user, profile, userSubscriptions }: ProfileCo
   const [activeTab, setActiveTab] = useState("overview")
 
   return (
-    <Card className="container p-6">
+    <div className="container rounded-lg border border-neothinker-200 bg-white p-6">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="md:col-span-1">
-          <TabsList className="flex flex-col w-full space-y-1 h-auto">
-            <TabsTrigger
-              value="overview"
-              className="w-full justify-start"
+          <div className="flex flex-col w-full space-y-1">
+            <button
+              type="button"
+              className={`flex w-full items-center justify-start rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                activeTab === "overview"
+                  ? "bg-neothinker-100 text-neothinker-900"
+                  : "hover:bg-neothinker-50 text-zinc-500"
+              }`}
               onClick={() => setActiveTab("overview")}
             >
               Overview
-            </TabsTrigger>
-            <TabsTrigger
-              value="edit"
-              className="w-full justify-start"
+            </button>
+            <button
+              type="button"
+              className={`flex w-full items-center justify-start rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                activeTab === "edit"
+                  ? "bg-neothinker-100 text-neothinker-900"
+                  : "hover:bg-neothinker-50 text-zinc-500"
+              }`}
               onClick={() => setActiveTab("edit")}
             >
               Edit Profile
-            </TabsTrigger>
-            <TabsTrigger
-              value="security"
-              className="w-full justify-start"
+            </button>
+            <button
+              type="button"
+              className={`flex w-full items-center justify-start rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                activeTab === "security"
+                  ? "bg-neothinker-100 text-neothinker-900"
+                  : "hover:bg-neothinker-50 text-zinc-500"
+              }`}
               onClick={() => setActiveTab("security")}
             >
               Security
-            </TabsTrigger>
-          </TabsList>
+            </button>
+          </div>
         </div>
         <div className="md:col-span-3">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsContent value="overview" className="m-0">
+          <div className="space-y-6">
+            {activeTab === "overview" && (
               <ProfileOverview user={user} profile={profile} userSubscriptions={userSubscriptions} />
-            </TabsContent>
-            <TabsContent value="edit" className="m-0">
+            )}
+            {activeTab === "edit" && (
               <ProfileForm user={user} profile={profile} />
-            </TabsContent>
-            <TabsContent value="security" className="m-0">
+            )}
+            {activeTab === "security" && (
               <ProfileSecurity user={user} />
-            </TabsContent>
-          </Tabs>
+            )}
+          </div>
         </div>
       </div>
-    </Card>
+    </div>
   )
 }

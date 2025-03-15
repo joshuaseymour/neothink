@@ -5,10 +5,6 @@ import { User } from "@supabase/supabase-js"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/use-toast"
 import { createClient } from "@/lib/supabase/client"
 
 const passwordSchema = z
@@ -30,7 +26,7 @@ interface ProfileSecurityProps {
 
 export function ProfileSecurity({ user }: ProfileSecurityProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
+  const [toast, setToast] = useState<{ title: string; description: string; type?: 'success' | 'error' } | null>(null)
   const supabase = createClient()
 
   const {
@@ -45,6 +41,7 @@ export function ProfileSecurity({ user }: ProfileSecurityProps) {
   const onSubmit = async (data: PasswordFormData) => {
     try {
       setIsLoading(true)
+      setToast(null)
 
       // First verify the current password
       const { error: signInError } = await supabase.auth.signInWithPassword({
@@ -53,10 +50,10 @@ export function ProfileSecurity({ user }: ProfileSecurityProps) {
       })
 
       if (signInError) {
-        toast({
+        setToast({
           title: "Error",
           description: "Current password is incorrect",
-          variant: "destructive",
+          type: "error"
         })
         return
       }
@@ -68,17 +65,18 @@ export function ProfileSecurity({ user }: ProfileSecurityProps) {
 
       if (updateError) throw updateError
 
-      toast({
+      setToast({
         title: "Success",
         description: "Your password has been updated successfully.",
+        type: "success"
       })
       reset()
     } catch (error) {
       console.error("Error updating password:", error)
-      toast({
+      setToast({
         title: "Error",
         description: "Failed to update password. Please try again.",
-        variant: "destructive",
+        type: "error"
       })
     } finally {
       setIsLoading(false)
@@ -86,19 +84,20 @@ export function ProfileSecurity({ user }: ProfileSecurityProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Change Password</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <div className="rounded-lg border border-neothinker-200 bg-white">
+      <div className="border-b border-neothinker-200 p-6">
+        <h2 className="text-xl font-semibold">Change Password</h2>
+      </div>
+      <div className="p-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-2">
-            <label htmlFor="currentPassword" className="text-sm font-medium">
+            <label htmlFor="currentPassword" className="text-sm font-medium leading-none">
               Current Password
             </label>
-            <Input
+            <input
               id="currentPassword"
               type="password"
+              className="flex h-10 w-full rounded-md border border-neothinker-200 bg-white px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-neothinker-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               {...register("currentPassword")}
               disabled={isLoading}
             />
@@ -107,12 +106,13 @@ export function ProfileSecurity({ user }: ProfileSecurityProps) {
             )}
           </div>
           <div className="space-y-2">
-            <label htmlFor="newPassword" className="text-sm font-medium">
+            <label htmlFor="newPassword" className="text-sm font-medium leading-none">
               New Password
             </label>
-            <Input
+            <input
               id="newPassword"
               type="password"
+              className="flex h-10 w-full rounded-md border border-neothinker-200 bg-white px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-neothinker-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               {...register("newPassword")}
               disabled={isLoading}
             />
@@ -121,12 +121,13 @@ export function ProfileSecurity({ user }: ProfileSecurityProps) {
             )}
           </div>
           <div className="space-y-2">
-            <label htmlFor="confirmPassword" className="text-sm font-medium">
+            <label htmlFor="confirmPassword" className="text-sm font-medium leading-none">
               Confirm New Password
             </label>
-            <Input
+            <input
               id="confirmPassword"
               type="password"
+              className="flex h-10 w-full rounded-md border border-neothinker-200 bg-white px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-neothinker-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               {...register("confirmPassword")}
               disabled={isLoading}
             />
@@ -134,11 +135,26 @@ export function ProfileSecurity({ user }: ProfileSecurityProps) {
               <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>
             )}
           </div>
-          <Button type="submit" disabled={isLoading}>
+          <button
+            type="submit"
+            className="inline-flex h-10 items-center justify-center rounded-md bg-neothinker-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neothinker-700 focus:outline-none focus:ring-2 focus:ring-neothinker-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+            disabled={isLoading}
+          >
             {isLoading ? "Updating..." : "Update Password"}
-          </Button>
+          </button>
+
+          {toast && (
+            <div className={`rounded-lg border p-4 ${
+              toast.type === "error" 
+                ? "border-red-200 bg-red-50 text-red-900"
+                : "border-green-200 bg-green-50 text-green-900"
+            }`}>
+              <p className="text-sm font-medium">{toast.title}</p>
+              <p className="text-sm mt-1">{toast.description}</p>
+            </div>
+          )}
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
