@@ -12,6 +12,7 @@ const PUBLIC_ROUTES = [
   "/auth/callback",
   "/_not-found",
   "/not-found",
+  "/error",
 ]
 
 export async function middleware(request: NextRequest) {
@@ -25,7 +26,8 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith("/public") ||
       pathname === "/favicon.ico" ||
       pathname === "/_not-found" ||
-      pathname === "/not-found"
+      pathname === "/not-found" ||
+      pathname === "/error"
     ) {
       return NextResponse.next()
     }
