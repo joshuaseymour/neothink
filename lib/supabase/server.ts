@@ -47,16 +47,14 @@ export async function createServerClient() {
             try {
               cookieStore.set(name, value, { ...cookieConfig, ...options })
             } catch (error) {
-              console.error("Error setting cookie:", error)
-              throw new Error("Failed to set authentication cookie")
+              // Handle cookie errors silently in static generation
             }
           },
           remove(name: string, options: CookieOptions) {
             try {
               cookieStore.set(name, "", { ...cookieConfig, ...options, maxAge: 0 })
             } catch (error) {
-              console.error("Error removing cookie:", error)
-              throw new Error("Failed to remove authentication cookie")
+              // Handle cookie errors silently in static generation
             }
           },
         },

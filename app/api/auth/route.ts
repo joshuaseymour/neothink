@@ -1,6 +1,11 @@
+"use client"
+
 import { createServerClient } from "@/lib/supabase/server"
 import { type NextRequest } from "next/server"
 import { z } from "zod"
+
+export const dynamic = "force-dynamic"
+export const runtime = "edge"
 
 const loginSchema = z.object({
   email: z.string().email(),
