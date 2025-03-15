@@ -1,10 +1,10 @@
 "use client"
 
 import Link from "next/link"
-import { Logo } from "@/components/ui/logo"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Mail } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Logo } from "@/components/ui/logo"
 
 export default function VerifyPage() {
   return (
@@ -14,29 +14,30 @@ export default function VerifyPage() {
       </div>
       
       <Card>
-        <CardHeader className="space-y-2 text-center">
+        <CardHeader className="space-y-4 text-center">
           <div className="flex justify-center">
-            <div className="rounded-full bg-primary/10 p-3">
-              <Mail className="h-6 w-6 text-primary" />
+            <div className="rounded-full bg-neothinker-50 p-3">
+              <Mail className="w-8 h-8 text-neothinker-600" />
             </div>
           </div>
           <CardTitle className="text-2xl bg-gradient-primary bg-clip-text text-transparent">
             Check Your Email
           </CardTitle>
-          <CardDescription>
-            We&apos;ve sent you a verification link. Please check your email to activate your account.
+          <CardDescription className="text-base">
+            We&apos;ve sent you a verification link. Please check your email and click the link to verify your account.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="text-center text-sm text-muted-foreground">
-            <p>Didn&apos;t receive an email?</p>
-            <p>Check your spam folder or try signing up again with a different email address.</p>
-          </div>
-          <Button asChild className="w-full" size="lg">
+        <CardContent className="space-y-4">
+          <p className="text-sm text-center text-muted-foreground">
+            Once verified, you&apos;ll be redirected to complete your profile.
+          </p>
+          <div className="flex justify-center">
             <Link href="/auth/login">
-              Return to login
+              <Button variant="outline" className="w-full">
+                Back to Login
+              </Button>
             </Link>
-          </Button>
+          </div>
         </CardContent>
       </Card>
 

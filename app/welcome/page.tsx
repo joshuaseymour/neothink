@@ -24,7 +24,9 @@ export default function WelcomePage() {
       const fullName = formData.get("full_name") as string
 
       const { data: { user }, error: userError } = await supabase.auth.getUser()
-      if (userError) throw userError
+      if (userError || !user) {
+        throw userError || new Error("No user found")
+      }
 
       // Update profile
       const { error: profileError } = await supabase
@@ -97,3 +99,4 @@ export default function WelcomePage() {
       </div>
     </div>
   )
+}
