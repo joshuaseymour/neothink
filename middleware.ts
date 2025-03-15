@@ -24,8 +24,8 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith("/_next") ||
       pathname.startsWith("/public") ||
       pathname === "/favicon.ico" ||
-      pathname === "/not-found" ||
-      pathname === "/_not-found"
+      pathname === "/_not-found" ||
+      pathname === "/not-found"
     ) {
       return NextResponse.next()
     }
