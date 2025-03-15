@@ -60,8 +60,7 @@ export default function SignUpPage() {
   const passwordStrength = password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password)
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
-      {/* Left side - Form */}
+    <div className="min-h-screen flex flex-col">
       <div className="flex-1 flex items-center justify-center p-4 sm:p-8 lg:p-12">
         <Card className="w-full max-w-lg mx-auto">
           <CardHeader className="space-y-4 text-center pb-8">
@@ -162,59 +161,6 @@ export default function SignUpPage() {
             </form>
           </CardContent>
         </Card>
-      </div>
-
-      {/* Right side - Features */}
-      <div className="hidden lg:flex flex-1 relative bg-gradient-to-br from-blue-50 to-purple-50">
-        <div className="absolute inset-0 bg-grid-black/5" />
-        <div className="relative p-12 flex items-center justify-center">
-          <div className="max-w-lg space-y-8">
-            <h2 className="text-4xl font-bold text-gray-900 text-center">
-              Why Choose Neothink+?
-            </h2>
-            <div className="grid gap-6">
-              <div className="flex gap-4 items-start">
-                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                  <Check className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">Proven Methods</h3>
-                  <p className="text-gray-600 mt-2">
-                    Our scientifically-backed approaches have helped thousands achieve their goals.
-                  </p>
-                </div>
-              </div>
-              <div className="flex gap-4 items-start">
-                <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
-                  <Check className="h-6 w-6 text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">Expert Support</h3>
-                  <p className="text-gray-600 mt-2">
-                    Get guidance from our team of experienced professionals whenever you need it.
-                  </p>
-                </div>
-              </div>
-              <div className="flex gap-4 items-start">
-                <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                  <Check className="h-6 w-6 text-indigo-600" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900">Community</h3>
-                  <p className="text-gray-600 mt-2">
-                    Join a thriving community of like-minded individuals on their journey to excellence.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Background gradient effects */}
-      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -right-1/4 w-96 h-96 bg-purple-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
-        <div className="absolute -bottom-1/2 -left-1/4 w-96 h-96 bg-blue-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000" />
       </div>
     </div>
   )

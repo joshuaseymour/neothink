@@ -12,32 +12,30 @@ import { createClient } from "@/lib/supabase/client"
 import { Loader2 } from "lucide-react"
 import { Logo } from "@/components/ui/logo"
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const { toast } = useToast()
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
       const supabase = createClient()
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/callback?next=/auth/update-password`,
       })
 
       if (error) throw error
 
       toast({
-        title: "Welcome back!",
-        description: "Successfully logged in to your account.",
+        title: "Check your email",
+        description: "We've sent you a password reset link.",
       })
 
-      router.push("/dashboard")
+      router.push("/auth/login")
     } catch (error: any) {
       toast({
         title: "Error",
@@ -58,14 +56,14 @@ export default function LoginPage() {
               <Logo />
             </div>
             <CardTitle className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-              Welcome Back
+              Reset Password
             </CardTitle>
             <CardDescription className="text-lg">
-              Sign in to continue your journey
+              Enter your email to receive a password reset link
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-8">
+            <form onSubmit={handleResetPassword} className="space-y-8">
               <div className="space-y-6">
                 <div className="space-y-3">
                   <Label htmlFor="email" className="text-base">Email</Label>
@@ -75,27 +73,6 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
-                    required
-                    disabled={isLoading}
-                    className="h-12 text-base"
-                  />
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password" className="text-base">Password</Label>
-                    <Link
-                      href="/auth/reset-password"
-                      className="text-sm font-medium text-primary hover:underline"
-                    >
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
                     required
                     disabled={isLoading}
                     className="h-12 text-base"
@@ -111,21 +88,21 @@ export default function LoginPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Signing in...
+                    Sending reset link...
                   </>
                 ) : (
-                  "Sign in"
+                  "Send reset link"
                 )}
               </Button>
 
               <div className="text-center pt-4">
                 <p className="text-base text-muted-foreground">
-                  Don&apos;t have an account?{" "}
+                  Remember your password?{" "}
                   <Link
-                    href="/auth/signup"
+                    href="/auth/login"
                     className="font-medium text-primary hover:underline"
                   >
-                    Sign up for free
+                    Sign in
                   </Link>
                 </p>
               </div>
