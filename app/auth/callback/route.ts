@@ -10,8 +10,9 @@ export async function GET(request: NextRequest) {
     const error = request.nextUrl.searchParams.get("error")
     const error_description = request.nextUrl.searchParams.get("error_description")
     const next = request.nextUrl.searchParams.get("next") || "/dashboard"
+    const type = request.nextUrl.searchParams.get("type") || "signin"
 
-    console.log("Auth callback called with:", { code, error, error_description, next })
+    console.log("Auth callback called with:", { code, error, error_description, next, type })
 
     // Handle authentication errors
     if (error || !code) {
@@ -24,8 +25,10 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Exchange the code for a session
+    // Create Supabase client
     const supabase = await createServerClient()
+
+    // Exchange the code for a session
     const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
 
     if (exchangeError) {
@@ -61,7 +64,32 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Check if user has completed onboarding
+    // For email confirmation, create profile if it doesn't exist
+    if (type === "signup") {
+      const { error: profileCreateError } = await supabase
+        .from("profiles")
+        .insert([
+          {
+            id: session.user.id,
+            email: session.user.email,
+            onboarding_completed: false,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          },
+        ])
+        .select()
+        .single()
+
+      if (profileCreateError) {
+        console.error("Profile creation error:", profileCreateError)
+        // Don't fail the auth flow for profile errors
+      }
+
+      // Always redirect to welcome page for new signups
+      return NextResponse.redirect(new URL("/welcome", origin))
+    }
+
+    // For sign-in, check if user has completed onboarding
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("onboarding_completed")
