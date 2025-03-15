@@ -1,7 +1,6 @@
 "use client"
 
 import { Brain } from "lucide-react"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function VerifyPage() {
   return (
@@ -16,11 +15,9 @@ export default function VerifyPage() {
         </p>
       </div>
 
-      <Alert>
-        <AlertDescription>
-          If you don't see the email in your inbox, check your spam folder.
-        </AlertDescription>
-      </Alert>
+      <div className="rounded-lg border border-neothinker-200 bg-neothinker-50 p-4 text-sm text-zinc-500">
+        If you don't see the email in your inbox, check your spam folder.
+      </div>
     </div>
   )
 }
