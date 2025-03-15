@@ -24,7 +24,7 @@ export default function ResetPasswordPage() {
     const email = formData.get("email") as string
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/callback`,
+      redirectTo: `${window.location.origin}/auth/callback?next=/update-password`,
     })
 
     setIsLoading(false)
@@ -34,7 +34,7 @@ export default function ResetPasswordPage() {
     }
 
     toast.success("Check your email for the password reset link")
-    router.push("/auth/login")
+    router.push("/auth/update-password")
   }
 
   return (
