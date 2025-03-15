@@ -3,166 +3,134 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
+import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { useToast } from "@/components/ui/use-toast"
-import { createClient } from "@/lib/supabase/client"
-import { Loader2, Check } from "lucide-react"
 import { Logo } from "@/components/ui/logo"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function SignUpPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const { toast } = useToast()
+  const supabase = createClient()
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault()
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
     setIsLoading(true)
 
-    try {
-      if (password !== confirmPassword) {
-        throw new Error("Passwords do not match")
-      }
+    const formData = new FormData(event.currentTarget)
+    const email = formData.get("email") as string
+    const password = formData.get("password") as string
+    const confirmPassword = formData.get("confirm-password") as string
 
-      const supabase = createClient()
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      })
-
-      if (error) throw error
-
-      toast({
-        title: "Welcome to Neothink+!",
-        description: "Please check your email to verify your account.",
-      })
-
-      router.push("/auth/verify")
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      })
-    } finally {
+    if (password !== confirmPassword) {
       setIsLoading(false)
+      return toast.error("Passwords do not match")
     }
-  }
 
-  const passwordStrength = password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password)
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    })
+
+    if (error) {
+      setIsLoading(false)
+      return toast.error(error.message)
+    }
+
+    router.push("/auth/verify")
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
-      <Card className="w-full max-w-2xl mx-auto">
-        <CardHeader className="space-y-6 text-center p-8">
-          <div className="flex justify-center">
-            <Logo className="h-12 w-auto" />
-          </div>
-          <div className="space-y-2">
-            <CardTitle className="bg-gradient-primary bg-clip-text text-transparent">
-              Join Neothink+
+      <div className="w-full max-w-2xl mx-auto space-y-8">
+        <div className="flex justify-center">
+          <Logo className="h-12 w-auto" />
+        </div>
+        
+        <Card className="w-full">
+          <CardHeader className="space-y-2 text-center">
+            <CardTitle className="text-2xl bg-gradient-primary bg-clip-text text-transparent">
+              Create Your Account
             </CardTitle>
-            <CardDescription className="text-lg text-muted-foreground">
-              Create your account to get started
+            <CardDescription>
+              Enter your email and create a password to get started
             </CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent className="p-8">
-          <form onSubmit={handleSignUp} className="space-y-8">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  required
-                  disabled={isLoading}
-                  className="h-11"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Create a password"
-                  required
-                  disabled={isLoading}
-                  className="h-11"
-                />
-                <div className="space-y-3 text-sm text-muted-foreground pt-1">
-                  <div className="flex items-center gap-2">
-                    <Check className={`h-4 w-4 ${password.length >= 8 ? 'text-green-500' : 'text-gray-300'}`} />
-                    <span>At least 8 characters</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Check className={`h-4 w-4 ${/[A-Z]/.test(password) ? 'text-green-500' : 'text-gray-300'}`} />
-                    <span>One uppercase letter</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Check className={`h-4 w-4 ${/[0-9]/.test(password) ? 'text-green-500' : 'text-gray-300'}`} />
-                    <span>One number</span>
-                  </div>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={onSubmit} className="space-y-6">
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    placeholder="name@example.com"
+                    type="email"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoCapitalize="none"
+                    autoComplete="new-password"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                    required
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Password must be at least 8 characters long, contain one uppercase letter and one number
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-password">Confirm Password</Label>
+                  <Input
+                    id="confirm-password"
+                    name="confirm-password"
+                    type="password"
+                    autoCapitalize="none"
+                    autoComplete="new-password"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                    required
+                  />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirm Password</Label>
-                <Input
-                  id="confirm-password"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm your password"
-                  required
-                  disabled={isLoading}
-                  className="h-11"
-                />
-              </div>
-            </div>
+              <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+                {isLoading ? "Creating account..." : "Create account"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
 
-            <Button
-              type="submit"
-              size="lg"
-              className="w-full font-medium"
-              disabled={isLoading || !passwordStrength || password !== confirmPassword}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Creating account...
-                </>
-              ) : (
-                "Create account"
-              )}
-            </Button>
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground">
+            Already have an account?{" "}
+            <Link href="/auth/login" className="font-medium text-primary hover:text-primary/80">
+              Sign in
+            </Link>
+          </p>
+        </div>
 
-            <div className="text-center">
-              <p className="text-muted-foreground">
-                Already have an account?{" "}
-                <Link
-                  href="/auth/login"
-                  className="font-medium text-primary hover:text-primary/80"
-                >
-                  Sign in
-                </Link>
-              </p>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+        {/* Background gradient effects */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute -top-1/2 -right-1/4 w-96 h-96 bg-red-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
+          <div className="absolute -bottom-1/2 -left-1/4 w-96 h-96 bg-amber-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000" />
+        </div>
+      </div>
     </div>
   )
 }
