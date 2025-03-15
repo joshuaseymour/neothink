@@ -20,30 +20,59 @@ export default function SignUpPage() {
     event.preventDefault()
     setIsLoading(true)
 
-    const formData = new FormData(event.currentTarget)
-    const email = formData.get("email") as string
-    const password = formData.get("password") as string
-    const confirmPassword = formData.get("confirm-password") as string
+    try {
+      const formData = new FormData(event.currentTarget)
+      const email = formData.get("email") as string
+      const password = formData.get("password") as string
+      const confirmPassword = formData.get("confirm-password") as string
 
-    if (password !== confirmPassword) {
+      if (password !== confirmPassword) {
+        setIsLoading(false)
+        return toast.error("Passwords do not match")
+      }
+
+      if (password.length < 8) {
+        setIsLoading(false)
+        return toast.error("Password must be at least 8 characters long")
+      }
+
+      if (!/[A-Z]/.test(password)) {
+        setIsLoading(false)
+        return toast.error("Password must contain at least one uppercase letter")
+      }
+
+      if (!/[0-9]/.test(password)) {
+        setIsLoading(false)
+        return toast.error("Password must contain at least one number")
+      }
+
+      console.log("Attempting signup with:", { email })
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=/welcome`,
+        },
+      })
+
+      console.log("Signup response:", { data, error })
+
+      if (error) {
+        throw error
+      }
+
+      if (!data?.user) {
+        throw new Error("No user data returned")
+      }
+
+      toast.success("Check your email to verify your account")
+      router.push("/auth/verify")
+    } catch (error: any) {
+      console.error("Signup error:", error)
+      toast.error(error.message || "Failed to create account")
+    } finally {
       setIsLoading(false)
-      return toast.error("Passwords do not match")
     }
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/welcome`,
-      },
-    })
-
-    if (error) {
-      setIsLoading(false)
-      return toast.error(error.message)
-    }
-
-    router.push("/auth/verify")
   }
 
   return (

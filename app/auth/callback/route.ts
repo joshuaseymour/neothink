@@ -5,11 +5,13 @@ export const dynamic = "force-dynamic"
 
 export async function GET(request: NextRequest) {
   try {
-    const requestUrl = new URL(request.url)
-    const code = requestUrl.searchParams.get("code")
-    const error = requestUrl.searchParams.get("error")
-    const error_description = requestUrl.searchParams.get("error_description")
-    const next = requestUrl.searchParams.get("next") || "/dashboard"
+    const origin = new URL(request.url).origin
+    const code = request.nextUrl.searchParams.get("code")
+    const error = request.nextUrl.searchParams.get("error")
+    const error_description = request.nextUrl.searchParams.get("error_description")
+    const next = request.nextUrl.searchParams.get("next") || "/dashboard"
+
+    console.log("Auth callback called with:", { code, error, error_description, next })
 
     // Handle authentication errors
     if (error || !code) {
@@ -17,7 +19,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(
         new URL(
           `/auth/login?error=${encodeURIComponent(error_description || "Authentication failed")}`,
-          request.url
+          origin
         )
       )
     }
@@ -31,40 +33,56 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(
         new URL(
           `/auth/login?error=${encodeURIComponent("Failed to complete authentication")}`,
-          request.url
+          origin
         )
       )
     }
 
     // Get the user's session
-    const { data: { session } } = await supabase.auth.getSession()
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+
+    if (sessionError) {
+      console.error("Get session error:", sessionError)
+      return NextResponse.redirect(
+        new URL(
+          `/auth/login?error=${encodeURIComponent("Failed to get session")}`,
+          origin
+        )
+      )
+    }
 
     if (!session?.user) {
       console.error("No session after code exchange")
       return NextResponse.redirect(
         new URL(
           `/auth/login?error=${encodeURIComponent("Failed to create session")}`,
-          request.url
+          origin
         )
       )
     }
 
     // Check if user has completed onboarding
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from("profiles")
       .select("onboarding_completed")
       .eq("id", session.user.id)
       .single()
 
+    if (profileError) {
+      console.error("Profile fetch error:", profileError)
+      // Don't fail the auth flow for profile errors, just log and continue
+    }
+
     // Redirect to appropriate page
     const redirectTo = profile?.onboarding_completed ? next : "/welcome"
-    return NextResponse.redirect(new URL(redirectTo, request.url))
+    console.log("Redirecting to:", redirectTo)
+    return NextResponse.redirect(new URL(redirectTo, origin))
   } catch (error) {
     console.error("Unhandled auth callback error:", error)
     return NextResponse.redirect(
       new URL(
         `/auth/login?error=${encodeURIComponent("An unexpected error occurred")}`,
-        request.url
+        new URL(request.url).origin
       )
     )
   }
