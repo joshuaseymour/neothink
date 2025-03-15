@@ -1,14 +1,11 @@
+"use client"
+
 import type { Metadata } from "next"
 import { PageLayout } from "@/components/layout/PageLayout"
 import { HeroSection } from "@/components/sections/HeroSection"
 import { FeatureCard } from "@/components/sections/FeatureCard"
 import { Button } from "@/components/ui/button"
 import { Rocket, Brain, HeartPulse, Zap, Target, Users } from "lucide-react"
-
-export const metadata: Metadata = {
-  title: "Neothink+ | Transform Your Life",
-  description: "Join Neothink+ and unlock your full potential with our transformative programs.",
-}
 
 const PROGRAMS = [
   {
@@ -58,7 +55,7 @@ const FEATURES = [
   },
 ] as const
 
-export default function HomePage() {
+const HomePage = () => {
   return (
     <PageLayout>
       <main className="min-h-screen bg-background">
@@ -116,3 +113,5 @@ export default function HomePage() {
     </PageLayout>
   )
 }
+
+export default HomePage

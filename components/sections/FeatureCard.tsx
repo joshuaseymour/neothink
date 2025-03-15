@@ -1,19 +1,21 @@
 "use client"
 
 import { LucideIcon } from "lucide-react"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
 
-type VariantType = "ascender" | "neothinker" | "immortal" | "default"
+type VariantType = "ascender" | "neothinker" | "immortal"
 
 interface FeatureCardProps {
+  id: string
   title: string
   description: string
   icon: LucideIcon
-  badgeText?: string
   variant?: VariantType
+  badgeText?: string
   href?: string
 }
 
@@ -21,41 +23,36 @@ export function FeatureCard({
   title,
   description,
   icon: Icon,
+  variant,
   badgeText,
-  variant = "default",
   href = "/auth/signup",
 }: FeatureCardProps) {
-  const variantStyles: Record<VariantType, string> = {
-    ascender: "border-blue-500 hover:border-blue-400",
-    neothinker: "border-purple-500 hover:border-purple-400",
-    immortal: "border-green-500 hover:border-green-400",
-    default: "border-neutral-800 hover:border-neutral-700",
-  }
-
-  const badgeStyles: Record<VariantType, string> = {
-    ascender: "bg-blue-500/10 text-blue-500",
-    neothinker: "bg-purple-500/10 text-purple-500",
-    immortal: "bg-green-500/10 text-green-500",
-    default: "bg-neutral-500/10 text-neutral-500",
-  }
-
   return (
-    <Card className={`relative overflow-hidden transition-all ${variantStyles[variant]}`}>
+    <Card className={cn(
+      "relative overflow-hidden transition-all duration-300 hover:shadow-lg",
+      variant === "ascender" && "hover:border-blue-500/50",
+      variant === "neothinker" && "hover:border-purple-500/50",
+      variant === "immortal" && "hover:border-green-500/50"
+    )}>
       <CardHeader>
         <div className="flex items-center justify-between mb-2">
-          <Icon className="h-6 w-6" />
+          <Icon className="h-8 w-8" />
           {badgeText && (
-            <Badge variant="outline" className={badgeStyles[variant]}>
+            <Badge variant="outline" className={cn(
+              variant === "ascender" && "border-blue-500/50 text-blue-500",
+              variant === "neothinker" && "border-purple-500/50 text-purple-500",
+              variant === "immortal" && "border-green-500/50 text-green-500"
+            )}>
               {badgeText}
             </Badge>
           )}
         </div>
-        <h3 className="text-lg font-semibold">{title}</h3>
+        <CardTitle className="mt-4">{title}</CardTitle>
+        <CardDescription className="text-muted-foreground mb-4">{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground mb-4">{description}</p>
         <Link href={href}>
-          <Button className="w-full" variant={variant === "default" ? "default" : "outline"}>
+          <Button className="w-full" variant={variant === undefined ? "default" : "outline"}>
             Learn More
           </Button>
         </Link>
