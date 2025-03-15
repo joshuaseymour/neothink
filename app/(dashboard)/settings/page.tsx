@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
@@ -8,11 +8,17 @@ import { useToast } from "@/components/ui/use-toast"
 import { createClient } from "@/lib/supabase/client"
 
 export default function SettingsPage() {
-  const supabase = createClient()
+  const [supabase, setSupabase] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(false)
   const { toast } = useToast()
 
+  useEffect(() => {
+    setSupabase(createClient())
+  }, [])
+
   const handleUpdateSettings = async (setting: string, value: boolean) => {
+    if (!supabase) return
+
     try {
       setIsLoading(true)
 
@@ -70,7 +76,7 @@ export default function SettingsPage() {
               onCheckedChange={(checked) =>
                 handleUpdateSettings("email_notifications", checked)
               }
-              disabled={isLoading}
+              disabled={isLoading || !supabase}
             />
           </div>
           <div className="flex items-center justify-between">
@@ -84,7 +90,7 @@ export default function SettingsPage() {
               onCheckedChange={(checked) =>
                 handleUpdateSettings("progress_reminders", checked)
               }
-              disabled={isLoading}
+              disabled={isLoading || !supabase}
             />
           </div>
         </CardContent>
@@ -106,7 +112,7 @@ export default function SettingsPage() {
               onCheckedChange={(checked) =>
                 handleUpdateSettings("profile_visible", checked)
               }
-              disabled={isLoading}
+              disabled={isLoading || !supabase}
             />
           </div>
           <div className="flex items-center justify-between">
@@ -120,7 +126,7 @@ export default function SettingsPage() {
               onCheckedChange={(checked) =>
                 handleUpdateSettings("share_progress", checked)
               }
-              disabled={isLoading}
+              disabled={isLoading || !supabase}
             />
           </div>
         </CardContent>
@@ -134,6 +140,7 @@ export default function SettingsPage() {
           <Button
             variant="outline"
             className="w-full"
+            disabled={!supabase}
             onClick={() => {
               toast({
                 title: "Coming soon",
@@ -146,6 +153,7 @@ export default function SettingsPage() {
           <Button
             variant="destructive"
             className="w-full"
+            disabled={!supabase}
             onClick={() => {
               toast({
                 title: "Coming soon",
