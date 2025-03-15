@@ -1,95 +1,113 @@
 "use client"
 
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { createClient } from "@/lib/supabase/client"
+
 export const dynamic = "force-dynamic"
 
-import { Brain } from "lucide-react"
-
 export default function DashboardPage() {
+  const [isLoading, setIsLoading] = useState(true)
+  const [toast, setToast] = useState<{ title: string; description: string; type?: 'success' | 'error' } | null>(null)
+  const [profile, setProfile] = useState<{ name: string; bio: string | null } | null>(null)
+  const router = useRouter()
+  const supabase = createClient()
+
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const { data: { user }, error: userError } = await supabase.auth.getUser()
+
+        if (userError || !user) {
+          throw new Error(userError?.message || "User not found")
+        }
+
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("name, bio, onboarding_completed")
+          .eq("id", user.id)
+          .single()
+
+        if (profileError) {
+          throw profileError
+        }
+
+        if (!profile.onboarding_completed) {
+          router.push("/welcome")
+          return
+        }
+
+        setProfile(profile)
+      } catch (error: any) {
+        console.error("Dashboard error:", error)
+        setToast({
+          title: "Error",
+          description: error.message || "Failed to load profile. Please try again.",
+          type: "error"
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadProfile()
+  }, [router, supabase])
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl">
+          <div className="flex items-center justify-center py-12">
+            <svg
+              className="animate-spin h-8 w-8 text-neothinker-600"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="container mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
-      {/* Welcome Header */}
-      <div className="flex items-center space-x-4">
-        <div className="rounded-full bg-neothinker-50 p-3">
-          <Brain className="w-8 h-8 text-neothinker-600" />
-        </div>
-        <div>
-          <h1 className="text-3xl sm:text-4xl font-bold">
-            Welcome to{" "}
-            <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Neothink
-            </span>
-          </h1>
-          <p className="text-lg text-zinc-500">
-            Your personal learning dashboard
-          </p>
-        </div>
-      </div>
+    <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-3xl">
+        <div className="rounded-lg border border-neothinker-200 bg-white">
+          <div className="border-b border-neothinker-200 p-6">
+            <h2 className="text-xl font-semibold">Welcome back, {profile?.name}</h2>
+          </div>
+          <div className="p-6">
+            {profile?.bio && (
+              <p className="text-sm text-zinc-500">{profile.bio}</p>
+            )}
 
-      {/* Dashboard Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Quick Start */}
-        <div className="rounded-lg border border-neothinker-200 bg-white p-6">
-          <div className="space-y-1.5">
-            <h2 className="text-xl font-semibold">Quick Start</h2>
-            <p className="text-sm text-zinc-500">Get started with Neothink</p>
-          </div>
-          <div className="mt-6">
-            <ul className="space-y-4">
-              <li className="flex items-center text-sm">
-                <div className="h-2 w-2 rounded-full bg-neothinker-500 mr-2" />
-                Complete your profile
-              </li>
-              <li className="flex items-center text-sm">
-                <div className="h-2 w-2 rounded-full bg-neothinker-500 mr-2" />
-                Set your learning preferences
-              </li>
-              <li className="flex items-center text-sm">
-                <div className="h-2 w-2 rounded-full bg-neothinker-500 mr-2" />
-                Start your first course
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Progress */}
-        <div className="rounded-lg border border-neothinker-200 bg-white p-6">
-          <div className="space-y-1.5">
-            <h2 className="text-xl font-semibold">Your Progress</h2>
-            <p className="text-sm text-zinc-500">Track your learning journey</p>
-          </div>
-          <div className="mt-6">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Courses Completed</span>
-                  <span className="font-medium">0/0</span>
-                </div>
-                <div className="h-2 bg-zinc-100 rounded-full">
-                  <div className="h-full bg-neothinker-500 rounded-full w-0" />
-                </div>
+            {toast && (
+              <div className={`mt-4 rounded-lg border p-4 ${
+                toast.type === "error" 
+                  ? "border-red-200 bg-red-50 text-red-900"
+                  : "border-green-200 bg-green-50 text-green-900"
+              }`}>
+                <p className="text-sm font-medium">{toast.title}</p>
+                <p className="text-sm mt-1">{toast.description}</p>
               </div>
-            </div>
+            )}
           </div>
         </div>
-
-        {/* Recent Activity */}
-        <div className="rounded-lg border border-neothinker-200 bg-white p-6">
-          <div className="space-y-1.5">
-            <h2 className="text-xl font-semibold">Recent Activity</h2>
-            <p className="text-sm text-zinc-500">Your latest interactions</p>
-          </div>
-          <div className="mt-6">
-            <div className="text-sm text-zinc-500 text-center py-8">
-              No recent activity
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Background gradient effects */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-1/2 -right-1/4 w-96 h-96 bg-red-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
-        <div className="absolute -bottom-1/2 -left-1/4 w-96 h-96 bg-amber-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000" />
       </div>
     </div>
   )
