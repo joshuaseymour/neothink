@@ -1,87 +1,58 @@
-import { HeroSection } from "@/components/sections/HeroSection"
-import { FeatureCard } from "@/components/sections/FeatureCard"
+"use client"
+
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { Logo } from "@/components/ui/logo"
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Brain } from "lucide-react"
 
-export default function HomePage() {
+export default function Home() {
+  const router = useRouter()
+
+  useEffect(() => {
+    // Redirect to dashboard if user is authenticated
+    router.replace("/auth/login")
+  }, [router])
+
   return (
-    <main>
-      {/* Hero Section */}
-      <HeroSection />
-
-      {/* Programs Section */}
-      <section className="py-24 bg-gradient-to-b from-background via-background to-muted/30" id="programs">
-        <div className="container px-4 md:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4">
-              Transform Your Life
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Choose your path to personal growth and unlock your full potential
-              with our specialized programs.
-            </p>
-          </div>
-
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <FeatureCard
-              icon="Rocket"
-              title="Ascender Program"
-              description="Master wealth creation and financial independence through proven strategies and expert guidance."
-              badgeText="Most Popular"
-              variant="ascender"
-            />
-            <FeatureCard
-              icon="Brain"
-              title="Neothinker Program"
-              description="Enhance your cognitive abilities and unlock your mind's true potential."
-              variant="neothinker"
-            />
-            <FeatureCard
-              icon="Zap"
-              title="Immortal Program"
-              description="Optimize your health and vitality for peak physical and mental performance."
-              variant="immortal"
-            />
-          </div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-950">
+      <div className="w-full max-w-md mx-auto space-y-8">
+        <div className="flex justify-center">
+          <Logo className="h-12 w-auto" />
         </div>
-      </section>
 
-      {/* Features Section */}
-      <section className="py-24 bg-muted/30">
-        <div className="container px-4 md:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4">
-              Why Choose Neothink+
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Experience a revolutionary approach to personal development that
-              combines cutting-edge research with practical application.
-            </p>
-          </div>
+        <Card>
+          <CardHeader className="space-y-4 text-center">
+            <div className="flex justify-center">
+              <div className="rounded-full bg-amber-50 dark:bg-amber-950 p-3">
+                <Brain className="w-8 h-8 text-amber-600 dark:text-amber-400" />
+              </div>
+            </div>
+            <CardTitle className="text-2xl">Welcome to Neothink+</CardTitle>
+            <CardDescription className="text-base">
+              Redirecting you to login...
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex justify-center">
+              <Button
+                variant="default"
+                className="w-full"
+                onClick={() => router.push("/auth/login")}
+              >
+                Go to Login
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {/* Add feature cards here */}
-          </div>
+        {/* Background gradient effects */}
+        <div className="fixed inset-0 -z-10 overflow-hidden">
+          <div className="absolute -top-1/2 -right-1/4 w-96 h-96 bg-amber-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
+          <div className="absolute -bottom-1/2 -left-1/4 w-96 h-96 bg-amber-800/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000" />
         </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-b from-muted/30 to-background relative overflow-hidden">
-        <div className="container px-4 md:px-6 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-6">
-              Ready to Transform Your Life?
-            </h2>
-            <p className="text-xl text-muted-foreground mb-8">
-              Join thousands of successful individuals who have already taken the
-              first step towards their extraordinary future.
-            </p>
-            <Button asChild size="lg" className="h-12 px-8 text-lg">
-              <Link href="/auth/signup">Get Started Today</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-    </main>
+      </div>
+    </div>
   )
 }
