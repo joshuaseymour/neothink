@@ -48,24 +48,26 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <Card className="w-full max-w-2xl mx-auto">
-        <CardHeader className="space-y-4 text-center pb-8 px-8">
-          <div className="flex justify-center mb-8">
-            <Logo />
+        <CardHeader className="space-y-6 text-center p-8">
+          <div className="flex justify-center">
+            <Logo className="h-12 w-auto" />
           </div>
-          <CardTitle className="text-3xl sm:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            Reset Password
-          </CardTitle>
-          <CardDescription className="text-lg">
-            Enter your email to receive a password reset link
-          </CardDescription>
+          <div className="space-y-2">
+            <CardTitle className="bg-gradient-primary bg-clip-text text-transparent">
+              Reset Your Password
+            </CardTitle>
+            <CardDescription className="text-lg text-muted-foreground">
+              Enter your email to receive a password reset link
+            </CardDescription>
+          </div>
         </CardHeader>
-        <CardContent className="px-8">
+        <CardContent className="p-8">
           <form onSubmit={handleResetPassword} className="space-y-8">
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <Label htmlFor="email" className="text-base">Email</Label>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -74,14 +76,15 @@ export default function ResetPasswordPage() {
                   placeholder="Enter your email"
                   required
                   disabled={isLoading}
-                  className="h-12 text-base"
+                  className="h-11"
                 />
               </div>
             </div>
 
             <Button
               type="submit"
-              className="w-full h-12 text-base font-medium text-lg"
+              size="lg"
+              className="w-full font-medium"
               disabled={isLoading}
             >
               {isLoading ? (
@@ -94,12 +97,12 @@ export default function ResetPasswordPage() {
               )}
             </Button>
 
-            <div className="text-center pt-4">
-              <p className="text-base text-muted-foreground">
+            <div className="text-center">
+              <p className="text-muted-foreground">
                 Remember your password?{" "}
                 <Link
                   href="/auth/login"
-                  className="font-medium text-primary hover:underline"
+                  className="font-medium text-primary hover:text-primary/80"
                 >
                   Sign in
                 </Link>

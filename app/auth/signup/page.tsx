@@ -60,24 +60,26 @@ export default function SignUpPage() {
   const passwordStrength = password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password)
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <Card className="w-full max-w-2xl mx-auto">
-        <CardHeader className="space-y-4 text-center pb-8 px-8">
-          <div className="flex justify-center mb-8">
-            <Logo />
+        <CardHeader className="space-y-6 text-center p-8">
+          <div className="flex justify-center">
+            <Logo className="h-12 w-auto" />
           </div>
-          <CardTitle className="text-3xl sm:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            Join Neothink+
-          </CardTitle>
-          <CardDescription className="text-lg">
-            Create your account to get started
-          </CardDescription>
+          <div className="space-y-2">
+            <CardTitle className="bg-gradient-primary bg-clip-text text-transparent">
+              Join Neothink+
+            </CardTitle>
+            <CardDescription className="text-lg text-muted-foreground">
+              Create your account to get started
+            </CardDescription>
+          </div>
         </CardHeader>
-        <CardContent className="px-8">
+        <CardContent className="p-8">
           <form onSubmit={handleSignUp} className="space-y-8">
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <Label htmlFor="email" className="text-base">Email</Label>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -86,11 +88,11 @@ export default function SignUpPage() {
                   placeholder="Enter your email"
                   required
                   disabled={isLoading}
-                  className="h-12 text-base"
+                  className="h-11"
                 />
               </div>
-              <div className="space-y-3">
-                <Label htmlFor="password" className="text-base">Password</Label>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -99,7 +101,7 @@ export default function SignUpPage() {
                   placeholder="Create a password"
                   required
                   disabled={isLoading}
-                  className="h-12 text-base"
+                  className="h-11"
                 />
                 <div className="space-y-3 text-sm text-muted-foreground pt-1">
                   <div className="flex items-center gap-2">
@@ -116,8 +118,8 @@ export default function SignUpPage() {
                   </div>
                 </div>
               </div>
-              <div className="space-y-3">
-                <Label htmlFor="confirm-password" className="text-base">Confirm Password</Label>
+              <div className="space-y-2">
+                <Label htmlFor="confirm-password">Confirm Password</Label>
                 <Input
                   id="confirm-password"
                   type="password"
@@ -126,14 +128,15 @@ export default function SignUpPage() {
                   placeholder="Confirm your password"
                   required
                   disabled={isLoading}
-                  className="h-12 text-base"
+                  className="h-11"
                 />
               </div>
             </div>
 
             <Button
               type="submit"
-              className="w-full h-12 text-base font-medium text-lg"
+              size="lg"
+              className="w-full font-medium"
               disabled={isLoading || !passwordStrength || password !== confirmPassword}
             >
               {isLoading ? (
@@ -146,12 +149,12 @@ export default function SignUpPage() {
               )}
             </Button>
 
-            <div className="text-center pt-4">
-              <p className="text-base text-muted-foreground">
+            <div className="text-center">
+              <p className="text-muted-foreground">
                 Already have an account?{" "}
                 <Link
                   href="/auth/login"
-                  className="font-medium text-primary hover:underline"
+                  className="font-medium text-primary hover:text-primary/80"
                 >
                   Sign in
                 </Link>

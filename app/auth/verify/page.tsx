@@ -2,26 +2,32 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Logo } from "@/components/ui/logo"
 
 export default function VerifyPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="w-full max-w-md space-y-8 px-4">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="w-full max-w-2xl mx-auto space-y-8">
+        <div className="flex justify-center">
+          <Logo className="h-12 w-auto" />
+        </div>
+        <div className="text-center space-y-4">
+          <h1 className="bg-gradient-primary bg-clip-text text-transparent">
             Check Your Email
           </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            We&apos;ve sent you a verification link. Please check your email to verify your account.
-          </p>
-          <p className="mt-2 text-muted-foreground">
-            Once verified, you can sign in to your account.
-          </p>
+          <div className="space-y-2">
+            <p className="text-lg text-muted-foreground">
+              We&apos;ve sent you a verification link. Please check your email to verify your account.
+            </p>
+            <p className="text-muted-foreground">
+              Once verified, you can sign in to your account.
+            </p>
+          </div>
         </div>
 
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-center">
           <Link href="/auth/login">
-            <Button variant="outline">
+            <Button variant="outline" size="lg">
               Back to Login
             </Button>
           </Link>
