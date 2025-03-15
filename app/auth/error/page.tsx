@@ -3,72 +3,52 @@
 import { Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
-import { AlertCircle } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Logo } from "@/components/ui/logo"
 
 function ErrorContent() {
   const searchParams = useSearchParams()
-  const error = searchParams.get("error") || "An error occurred during authentication"
+  const error = searchParams.get("error")
 
   return (
-    <Card>
-      <CardHeader className="space-y-4 text-center">
-        <div className="flex justify-center">
-          <div className="rounded-full bg-red-50 p-3">
-            <AlertCircle className="w-8 h-8 text-red-600" />
-          </div>
+    <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+      <div className="flex flex-col space-y-2 text-center">
+        <div className="mx-auto rounded-full bg-neothinker-50 p-2">
+          <XCircle className="h-6 w-6 text-neothinker-600" />
         </div>
-        <CardTitle className="text-2xl bg-gradient-primary bg-clip-text text-transparent">
-          Authentication Error
-        </CardTitle>
-        <CardDescription className="text-base">
-          {error}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex justify-center">
-          <Link href="/auth/login">
-            <Button variant="default" className="w-full">
-              Return to Login
-            </Button>
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
+        <h1 className="text-2xl font-semibold tracking-tight">Authentication error</h1>
+        <p className="text-sm text-neothinker-500">
+          {error || "An error occurred during authentication"}
+        </p>
+      </div>
+
+      <Button 
+        asChild
+        className="bg-neothinker-600 hover:bg-neothinker-700 text-white"
+      >
+        <Link href="/auth/login">
+          Try again
+        </Link>
+      </Button>
+    </div>
   )
 }
 
-export default function AuthErrorPage() {
+export default function ErrorPage() {
   return (
-    <div className="w-full max-w-md mx-auto space-y-8">
-      <div className="flex justify-center">
-        <Logo className="h-12 w-auto" />
-      </div>
-
+    <div className="flex h-screen w-full items-center justify-center bg-neothinker-100">
       <Suspense fallback={
-        <Card>
-          <CardHeader className="space-y-4 text-center">
-            <div className="flex justify-center">
-              <div className="rounded-full bg-red-50 p-3">
-                <AlertCircle className="w-8 h-8 text-red-600" />
-              </div>
+        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+          <div className="flex flex-col space-y-2 text-center">
+            <div className="mx-auto rounded-full bg-neothinker-50 p-2">
+              <div className="h-6 w-6 animate-pulse rounded-full bg-neothinker-200" />
             </div>
-            <CardTitle className="text-2xl bg-gradient-primary bg-clip-text text-transparent">
-              Loading...
-            </CardTitle>
-          </CardHeader>
-        </Card>
+            <h1 className="text-2xl font-semibold tracking-tight">Loading...</h1>
+          </div>
+        </div>
       }>
         <ErrorContent />
       </Suspense>
-
-      {/* Background gradient effects */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-1/2 -right-1/4 w-96 h-96 bg-zinc-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
-        <div className="absolute -bottom-1/2 -left-1/4 w-96 h-96 bg-zinc-800/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000" />
-      </div>
     </div>
   )
 }
