@@ -70,11 +70,12 @@ export async function GET(request: NextRequest) {
 
     if (profileError) {
       console.error("Profile fetch error:", profileError)
-      // Don't fail the auth flow for profile errors, just log and continue
+      // Don't fail the auth flow for profile errors, redirect to welcome page
+      return NextResponse.redirect(new URL("/welcome", origin))
     }
 
     // Redirect to appropriate page
-    const redirectTo = profile?.onboarding_completed ? next : "/welcome"
+    const redirectTo = profile?.onboarding_completed === true ? next : "/welcome"
     console.log("Redirecting to:", redirectTo)
     return NextResponse.redirect(new URL(redirectTo, origin))
   } catch (error) {
