@@ -1,7 +1,8 @@
 "use client"
 
+export const dynamic = "force-dynamic"
+
 import { Brain } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function DashboardPage() {
   return (
@@ -18,7 +19,7 @@ export default function DashboardPage() {
               Neothink
             </span>
           </h1>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-lg text-zinc-500">
             Your personal learning dashboard
           </p>
         </div>
@@ -26,12 +27,13 @@ export default function DashboardPage() {
 
       {/* Dashboard Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Start</CardTitle>
-            <CardDescription>Get started with Neothink</CardDescription>
-          </CardHeader>
-          <CardContent>
+        {/* Quick Start */}
+        <div className="rounded-lg border border-neothinker-200 bg-white p-6">
+          <div className="space-y-1.5">
+            <h2 className="text-xl font-semibold">Quick Start</h2>
+            <p className="text-sm text-zinc-500">Get started with Neothink</p>
+          </div>
+          <div className="mt-6">
             <ul className="space-y-4">
               <li className="flex items-center text-sm">
                 <div className="h-2 w-2 rounded-full bg-neothinker-500 mr-2" />
@@ -46,15 +48,16 @@ export default function DashboardPage() {
                 Start your first course
               </li>
             </ul>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Your Progress</CardTitle>
-            <CardDescription>Track your learning journey</CardDescription>
-          </CardHeader>
-          <CardContent>
+        {/* Progress */}
+        <div className="rounded-lg border border-neothinker-200 bg-white p-6">
+          <div className="space-y-1.5">
+            <h2 className="text-xl font-semibold">Your Progress</h2>
+            <p className="text-sm text-zinc-500">Track your learning journey</p>
+          </div>
+          <div className="mt-6">
             <div className="space-y-4">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
@@ -66,20 +69,21 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Your latest interactions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-sm text-muted-foreground text-center py-8">
+        {/* Recent Activity */}
+        <div className="rounded-lg border border-neothinker-200 bg-white p-6">
+          <div className="space-y-1.5">
+            <h2 className="text-xl font-semibold">Recent Activity</h2>
+            <p className="text-sm text-zinc-500">Your latest interactions</p>
+          </div>
+          <div className="mt-6">
+            <div className="text-sm text-zinc-500 text-center py-8">
               No recent activity
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Background gradient effects */}

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 "use client"
 
 import { useState } from "react"
@@ -7,10 +9,6 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { useSupabase } from "@/components/providers"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 
 const welcomeSchema = z.object({
   fullName: z
@@ -81,8 +79,13 @@ export default function WelcomePage() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input
+              <label 
+                htmlFor="fullName" 
+                className="text-sm font-medium leading-none"
+              >
+                Full Name
+              </label>
+              <input
                 id="fullName"
                 placeholder="Enter your full name"
                 type="text"
@@ -90,6 +93,7 @@ export default function WelcomePage() {
                 autoComplete="name"
                 autoCorrect="off"
                 disabled={isLoading}
+                className="flex h-10 w-full rounded-md border border-neothinker-200 bg-white px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-neothinker-400 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 {...register("fullName")}
               />
               {errors.fullName && (
@@ -97,18 +101,18 @@ export default function WelcomePage() {
               )}
             </div>
 
-            <Button 
+            <button 
               type="submit"
-              className="bg-neothinker-600 hover:bg-neothinker-700 text-white" 
+              className="inline-flex h-10 items-center justify-center rounded-md bg-neothinker-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neothinker-700 focus:outline-none focus:ring-2 focus:ring-neothinker-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
               disabled={isLoading}
             >
               {isLoading ? "Saving..." : "Continue to Dashboard"}
-            </Button>
+            </button>
 
             {error && (
-              <Alert variant="error">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
+              <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+                <p className="text-sm text-red-900">{error}</p>
+              </div>
             )}
           </div>
         </form>
