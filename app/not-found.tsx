@@ -1,30 +1,47 @@
 "use client"
 
+import Link from "next/link"
+import { FileQuestion } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Logo } from "@/components/ui/logo"
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
-      <div className="text-center space-y-8">
-        <h1 className="font-bold bg-gradient-primary bg-clip-text text-transparent">
-          404 - Page Not Found
-        </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Sorry, we couldn't find the page you're looking for.
-        </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Button asChild size="lg" variant="default">
-            <a href="/">Go Home</a>
-          </Button>
-          <Button asChild size="lg" variant="outline">
-            <a href="/programs">View Programs</a>
-          </Button>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-950">
+      <div className="w-full max-w-md mx-auto space-y-8">
+        <div className="flex justify-center">
+          <Logo className="h-12 w-auto" />
         </div>
-      </div>
-      
-      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/2 -right-1/4 w-96 h-96 bg-immortal-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10" />
-        <div className="absolute -bottom-1/2 -left-1/4 w-96 h-96 bg-neothinker-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10" />
+
+        <Card>
+          <CardHeader className="space-y-4 text-center">
+            <div className="flex justify-center">
+              <div className="rounded-full bg-zinc-100 dark:bg-zinc-900 p-3">
+                <FileQuestion className="w-8 h-8 text-zinc-600 dark:text-zinc-400" />
+              </div>
+            </div>
+            <CardTitle className="text-2xl">Page Not Found</CardTitle>
+            <CardDescription className="text-base">
+              The page you're looking for doesn't exist or has been moved.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex justify-center">
+              <Link href="/">
+                <Button variant="default" className="w-full">
+                  Return Home
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Background gradient effects */}
+        <div className="fixed inset-0 -z-10 overflow-hidden">
+          <div className="absolute -top-1/2 -right-1/4 w-96 h-96 bg-zinc-500/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob" />
+          <div className="absolute -bottom-1/2 -left-1/4 w-96 h-96 bg-zinc-800/20 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000" />
+        </div>
       </div>
     </div>
   )
