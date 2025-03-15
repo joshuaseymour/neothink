@@ -34,7 +34,7 @@ export default function Layout({
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header user={user} />
+      <Header />
       <main className="flex-1 container py-8">
         {children}
       </main>
