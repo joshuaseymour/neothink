@@ -50,11 +50,43 @@ export default function WelcomePage() {
     checkSession()
   }, [router, supabase])
 
+  async function completeOnboarding() {
+    setIsLoading(true)
+    setToast(null)
+
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      
+      if (userError || !user) {
+        throw new Error(userError?.message || "User not found")
+      }
+
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({ onboarding_completed: true })
+        .eq("id", user.id)
+
+      if (updateError) {
+        throw updateError
+      }
+
+      router.push("/dashboard")
+    } catch (error: any) {
+      console.error("Welcome form error:", error)
+      setToast({
+        title: "Error",
+        description: error.message || "Failed to complete onboarding. Please try again.",
+        type: "error"
+      })
+      setIsLoading(false)
+    }
+  }
+
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <div className="flex items-center justify-center py-12">
+      <main className="flex min-h-screen items-center justify-center bg-zinc-50">
+        <div className="w-full max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center">
             <svg
               className="animate-spin h-8 w-8 text-neothinker-600"
               xmlns="http://www.w3.org/2000/svg"
@@ -77,57 +109,31 @@ export default function WelcomePage() {
             </svg>
           </div>
         </div>
-      </div>
+      </main>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-16 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl">
-        <div className="rounded-lg border border-neothinker-200 bg-white p-6">
-          <h1 className="text-2xl font-semibold mb-4">Welcome to Neothink</h1>
-          <p className="text-zinc-500 mb-6">Let's get you started with your learning journey.</p>
+    <main className="flex min-h-screen items-center justify-center bg-zinc-50">
+      <div className="w-full max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="rounded-lg border border-neothinker-200 bg-white p-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-semibold text-zinc-900">Welcome to Neothink</h1>
+            <p className="mt-2 text-sm text-zinc-500">
+              Let's get you started with your learning journey
+            </p>
+          </div>
 
-          <form onSubmit={async (e) => {
-            e.preventDefault()
-            setIsLoading(true)
-
-            try {
-              const { data: { user }, error: userError } = await supabase.auth.getUser()
-              
-              if (userError || !user) {
-                throw new Error(userError?.message || "User not found")
-              }
-
-              const { error: updateError } = await supabase
-                .from("profiles")
-                .update({ onboarding_completed: true })
-                .eq("id", user.id)
-
-              if (updateError) {
-                throw updateError
-              }
-
-              router.push("/dashboard")
-            } catch (error: any) {
-              console.error("Welcome form error:", error)
-              setToast({
-                title: "Error",
-                description: error.message || "Failed to complete onboarding. Please try again.",
-                type: "error"
-              })
-              setIsLoading(false)
-            }
-          }}>
+          <div className="mt-8">
             <button
-              type="submit"
+              onClick={completeOnboarding}
               disabled={isLoading}
-              className={`w-full rounded-lg bg-neothinker-600 px-4 py-2 text-white transition-colors
-                ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-neothinker-700"}`}
+              className={`w-full rounded-lg bg-neothinker-600 px-4 py-2 text-sm font-medium text-white transition-colors
+                ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-neothinker-700 focus:outline-none focus:ring-2 focus:ring-neothinker-500 focus:ring-offset-2"}`}
             >
               {isLoading ? "Getting Started..." : "Get Started"}
             </button>
-          </form>
+          </div>
 
           {toast && (
             <div className={`mt-4 rounded-lg border p-4 ${
@@ -141,6 +147,6 @@ export default function WelcomePage() {
           )}
         </div>
       </div>
-    </div>
+    </main>
   )
 }
