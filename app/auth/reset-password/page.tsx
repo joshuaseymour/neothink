@@ -55,7 +55,7 @@ export default function ResetPasswordPage() {
             <div className="flex justify-center mb-8">
               <Logo />
             </div>
-            <CardTitle className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+            <CardTitle className="text-3xl sm:text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent">
               Reset Password
             </CardTitle>
             <CardDescription className="text-lg">
