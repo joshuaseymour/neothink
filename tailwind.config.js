@@ -108,6 +108,11 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      backgroundImage: {
+        'gradient-primary': 'linear-gradient(to right, rgb(245 158 11), rgb(249 115 22), rgb(239 68 68))', // amber-500 -> orange-500 -> red-500
+        'gradient-primary-vertical': 'linear-gradient(to bottom, rgb(245 158 11), rgb(249 115 22), rgb(239 68 68))',
+        'gradient-primary-diagonal': 'linear-gradient(to bottom right, rgb(245 158 11), rgb(249 115 22), rgb(239 68 68))',
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
