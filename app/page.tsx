@@ -1,7 +1,6 @@
 import { HeroSection } from "@/components/sections/HeroSection"
 import { FeatureCard } from "@/components/sections/FeatureCard"
 import { Button } from "@/components/ui/button"
-import { Brain, Rocket, Zap } from "lucide-react"
 import Link from "next/link"
 
 export default function HomePage() {
@@ -25,20 +24,20 @@ export default function HomePage() {
 
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
-              icon={Rocket}
+              icon="Rocket"
               title="Ascender Program"
               description="Master wealth creation and financial independence through proven strategies and expert guidance."
               badgeText="Most Popular"
               variant="ascender"
             />
             <FeatureCard
-              icon={Brain}
+              icon="Brain"
               title="Neothinker Program"
               description="Enhance your cognitive abilities and unlock your mind's true potential."
               variant="neothinker"
             />
             <FeatureCard
-              icon={Zap}
+              icon="Zap"
               title="Immortal Program"
               description="Optimize your health and vitality for peak physical and mental performance."
               variant="immortal"

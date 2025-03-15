@@ -1,18 +1,26 @@
 "use client"
 
-import { LucideIcon } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { Brain, Rocket, Zap, LucideIcon } from "lucide-react"
+
+const ICONS = {
+  Brain,
+  Rocket,
+  Zap,
+} as const
+
+type IconName = keyof typeof ICONS
 
 type VariantType = "ascender" | "neothinker" | "immortal"
 
 interface FeatureCardProps {
   title: string
   description: string
-  icon: LucideIcon
+  icon: IconName
   variant?: VariantType
   badgeText?: string
   href?: string
@@ -22,12 +30,13 @@ interface FeatureCardProps {
 export function FeatureCard({
   title,
   description,
-  icon: Icon,
+  icon,
   variant,
   badgeText,
   href = "/auth/signup",
   className,
 }: FeatureCardProps) {
+  const Icon = ICONS[icon]
   return (
     <Card
       className={cn(
