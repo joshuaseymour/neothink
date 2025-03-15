@@ -52,13 +52,13 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Left side - Form */}
-      <div className="flex-1 flex items-center justify-center p-8">
-        <Card className="w-full max-w-md mx-auto">
-          <CardHeader className="space-y-2 text-center">
-            <div className="flex justify-center mb-6">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-8 lg:p-12">
+        <Card className="w-full max-w-lg mx-auto">
+          <CardHeader className="space-y-4 text-center pb-8">
+            <div className="flex justify-center mb-8">
               <Logo />
             </div>
-            <CardTitle className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+            <CardTitle className="text-3xl sm:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
               Welcome Back
             </CardTitle>
             <CardDescription className="text-lg">
@@ -66,10 +66,10 @@ export default function LoginPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+            <form onSubmit={handleLogin} className="space-y-8">
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <Label htmlFor="email" className="text-base">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -78,15 +78,15 @@ export default function LoginPage() {
                     placeholder="Enter your email"
                     required
                     disabled={isLoading}
-                    className="h-12"
+                    className="h-12 text-base"
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password" className="text-base">Password</Label>
                     <Link
                       href="/auth/reset-password"
-                      className="text-sm text-primary hover:underline"
+                      className="text-sm font-medium text-primary hover:underline"
                     >
                       Forgot password?
                     </Link>
@@ -99,19 +99,19 @@ export default function LoginPage() {
                     placeholder="Enter your password"
                     required
                     disabled={isLoading}
-                    className="h-12"
+                    className="h-12 text-base"
                   />
                 </div>
               </div>
 
               <Button
                 type="submit"
-                className="w-full h-12 text-base font-medium"
+                className="w-full h-12 text-base font-medium text-lg"
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                     Signing in...
                   </>
                 ) : (
@@ -119,8 +119,8 @@ export default function LoginPage() {
                 )}
               </Button>
 
-              <div className="text-center">
-                <p className="text-sm text-muted-foreground">
+              <div className="text-center pt-4">
+                <p className="text-base text-muted-foreground">
                   Don&apos;t have an account?{" "}
                   <Link
                     href="/auth/signup"
